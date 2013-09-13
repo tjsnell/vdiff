@@ -9,21 +9,11 @@
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <bean id="myRouteBuilder" class="cc.notsoclever.tools.MyRouteBuilder"></bean>
-    <!--
-        Simple camel route which send every one minute a message on the console.
-    -->
+
     <camelContext xmlns="http://camel.apache.org/schema/spring">
         <routeBuilder ref="myRouteBuilder"></routeBuilder>
     </camelContext>
 
-    <!--<camelContext>-->
-        <!--<route id="RS_RestletDemo">-->
-            <!--<from uri="restlet:/demo/{id}" />-->
-            <!--<transform>-->
-                <!--<simple>Request type : ${header.CamelHttpMethod} and ID : ${header.id}</simple>-->
-            <!--</transform>-->
-        <!--</route>-->
-    <!--</camelContext>-->
 
     <bean id="RestletComponent" class="org.restlet.Component" />
 

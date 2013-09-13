@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" ng-app xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>My HTML File</title>
+    <script src="lib/angular.min.107.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.js"></script>
+    <script src="js/lib/angular-table.js"></script>
+    <script src="DiffCtrl.js"></script>
+    <linK href="lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="css/lib/angular-table.css" rel="stylesheet" type="text/css"/>
+    <style>
+            /* Hide Angular JS elements before initializing */
+        .ng-cloak {
+            display: none;
+        }
+    </style>
+</head>
+<body ng-controller="DiffCtrl" data-ng-init="init()">
+
+<div class="container">
+    <form ng-submit="diff()">
+        <p/>
+
+        <h1>Camel Dependencies Version Differences</h1>
+        <br/>
+
+        <p/>
+
+        <p>
+            Version 1: <select name="option" ng-model="v1" ng-options="o for o in optionsList"></select>
+        </p>
+
+        <p>
+            Version 2: <select name="option" ng-model="v2" ng-options="o for o in optionsList"></select>
+
+        <p>
+
+            <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}" ng-click="diff()">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Diff</span>
+            </span>
+    </form>
+
+    </p>
+    <h3>Added Packages</h3>
+    <br/>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+        <tr ng-repeat="(key, value) in added">
+            <td> {{key}}</td>
+            <td> {{ value }}</td>
+        </tr>
+    </table>
+
+    <p/>
+
+    <h3>Dropped Packages</h3>
+    <br/>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+        <tr ng-repeat="(key, value) in dropped">
+            <td> {{key}}</td>
+            <td> {{ value }}</td>
+        </tr>
+    </table>
+
+
+    <p/>
+
+    <h3>Changed Packages</h3>
+    <br/>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+        <tr ng-repeat="pkg in changed">
+            <td> {{pkg[0]}}</td>
+            <td> {{pkg[1]}}</td>
+            <td> {{pkg[2]}}</td>
+        </tr>
+    </table>
+
+    <h3>Unchanged Packages</h3>
+    <br/>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="unchanged">
+        <tr ng-repeat="(key, value) in unchanged">
+            <td> {{key}}</td>
+            <td> {{ value }}</td>
+        </tr>
+    </table>
+
+
+    <!--<table class="table table-striped table-bordered table-condensed">-->
+
+    <!--<angular-table model="added">-->
+    <!--<row on-selected="handleRowSelection(row)" selected-color="#87cefa"-->
+    <!--even-color="#ffffff" odd-color="#eeeeee">-->
+    <!--<column>111{{ row.key }}</column>-->
+    <!--</row>-->
+    <!--</angular-table>-->
+
+</div>
+</body>
+</html>

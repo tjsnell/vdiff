@@ -21,7 +21,7 @@
         <!--<spring.version>3.1.4.RELEASE</spring.version>-->
         <!--<restlet.version>2.1.4</restlet.version>-->
 
-        <camel.version>2.10.0</camel.version>
+        <camel.version>2.10.6</camel.version>
         <spring.version>3.0.7.RELEASE</spring.version>
         <restlet.version>2.0.14</restlet.version>
 
