@@ -3,8 +3,10 @@ package cc.notsoclever.tools;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.restlet.RestletComponent;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.restlet.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class MyRouteBuilder extends RouteBuilder {
     */
    public void configure() {
 
+      getContext().addComponent("restlet", new RestletComponent(new Component()));
 //      KeyStoreParameters ksp = new KeyStoreParameters();
 //      ksp.setResource("keystore.jks");
 //      ksp.setPassword("password");

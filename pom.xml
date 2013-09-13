@@ -69,7 +69,7 @@
 
 
         <dependency>
-            <groupId>org.apache.camel</groupId>
+            <groupId>org.apache.camel.fix</groupId>
             <artifactId>camel-restlet</artifactId>
             <version>${camel.version}</version>
         </dependency>
@@ -151,6 +151,12 @@
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
         </repository>
+
+        <repository>
+            <id>repo</id>
+            <url>file://${project.basedir}/repo</url>
+        </repository>
+
     </repositories>
 
     <build>
