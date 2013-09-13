@@ -1,5 +1,6 @@
 package cc.notsoclever.tools;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -26,15 +27,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Created with IntelliJ IDEA.
- * User: tjs
- * Date: 8/23/13
- * Time: 7:27 AM
- * To change this template use File | Settings | File Templates.
- */
+
 @JsonIgnoreProperties({"versions1", "versions2"})
 public class Versions {
+   static Logger LOG = Logger.getLogger(Versions.class.getName());
+
    public static String POM_URL = "https://raw.github.com/apache/camel/camel-{ver}/parent/pom.xml";
    public static String TAGS_URL = "https://api.github.com/repos/apache/camel/tags";
    private int totalDropped;
@@ -54,6 +51,7 @@ public class Versions {
    private Map<String, String> versions1 = new HashMap<String, String>();
 
    public void compare(String versions1Tag, String versions2Tag) throws Exception {
+      LOG.error("Comparing version " + versions1Tag + " and " + versions2Tag);
       unChanged = new HashMap<String, String>();
       changed = new ArrayList<List<String>>();
 
@@ -135,6 +133,7 @@ public class Versions {
    }
 
    public String getTags() throws Exception {
+      LOG.error("Get TAGS");
       URL url = new URL(TAGS_URL);
       HttpURLConnection c = (HttpURLConnection) url.openConnection();
       c.setRequestMethod("GET");
