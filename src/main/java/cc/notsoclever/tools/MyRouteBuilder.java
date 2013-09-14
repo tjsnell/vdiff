@@ -21,7 +21,7 @@ public class MyRouteBuilder extends RouteBuilder {
     */
    public void configure() {
 
-      getContext().addComponent("restlet", new RestletComponent(new Component()));
+//      getContext().addComponent("restlet", new RestletComponent(new Component()));
 //      KeyStoreParameters ksp = new KeyStoreParameters();
 //      ksp.setResource("keystore.jks");
 //      ksp.setPassword("password");
