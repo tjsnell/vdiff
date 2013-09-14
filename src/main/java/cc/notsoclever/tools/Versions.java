@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.lang.model.element.Name;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,6 +22,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +54,7 @@ public class Versions {
    private Map<String, String> versions1 = new HashMap<String, String>();
 
    public void compare(String versions1Tag, String versions2Tag) throws Exception {
-      LOG.error("Comparing version " + versions1Tag + " and " + versions2Tag);
+      LOG.info("Comparing version " + versions1Tag + " and " + versions2Tag);
       unChanged = new HashMap<String, String>();
       changed = new ArrayList<List<String>>();
 
@@ -61,9 +64,16 @@ public class Versions {
       versions1 = loadVersions(versions1Tag);
       versions2 = loadVersions(versions2Tag);
       diffVersions();
+
+      Collections.sort(changed, new Comparator<Object>() {
+         @Override
+         public int compare(Object o1, Object o2) {
+            return ((String) o1).compareToIgnoreCase((String) o2);
+         }
+      });
    }
 
-   private List<List<String>> diffVersions() {
+   private void diffVersions() {
 
       Set<String> versions1Keys = versions1.keySet();
       Set<String> versions2Keys = versions2.keySet();
@@ -87,32 +97,9 @@ public class Versions {
       total = versions2.size();
 
       getUpdateVersions();
-      getDeletedVersions(versions1Dropped);
-      getAddedVersions(versions2Added);
       totalChanged = changed.size();
-
-      return changed;
    }
 
-   private void getAddedVersions(Set<String> added) {
-//      for (String k : added) {
-//         List<String> l = new ArrayList<String>();
-//         l.add(k);
-//         l.add("");
-//         l.add(versions2.get(k));
-//         changed.add(l);
-//      }
-   }
-
-   private void getDeletedVersions(Set<String> dropped) {
-//      for (String k : dropped) {
-//         List<String> l = new ArrayList<String>();
-//         l.add(k);
-//         l.add(versions1.get(k));
-//         l.add("");
-//         changed.add(l);
-//      }
-   }
 
    private void getUpdateVersions() {
       for (String k : versions1.keySet()) {
@@ -140,8 +127,6 @@ public class Versions {
       c.setRequestProperty("Content-length", "0");
       c.setUseCaches(false);
       c.setAllowUserInteraction(false);
-//      c.setConnectTimeout(timeout);
-//      c.setReadTimeout(timeout);
       c.connect();
       int status = c.getResponseCode();
 
@@ -163,7 +148,6 @@ public class Versions {
 
    private Map<String, String> loadVersions(String version) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
       URL url = new URL(POM_URL.replace("{ver}", version));
-      System.out.println("url = " + url);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -179,7 +163,6 @@ public class Versions {
 
       Map<String, String> versions = new HashMap<String, String>();
 
-      System.out.println("nodes.getLength() = " + nodes.getLength());
       for (int i = 0; i < nodes.getLength(); i++) {
          Node node = nodes.item(i);
          String nodeName = node.getNodeName();
@@ -189,7 +172,6 @@ public class Versions {
          String nodeValue = node.getChildNodes().item(0).getNodeValue();
          versions.put(nodeName.replace("-version", ""), nodeValue);
       }
-      System.out.println("Versions found - " + versions.size());
       return versions;
    }
 
@@ -232,4 +214,6 @@ public class Versions {
    public Map<String, String> getAdded() {
       return added;
    }
+
+
 }

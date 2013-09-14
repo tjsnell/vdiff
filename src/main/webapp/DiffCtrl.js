@@ -3,7 +3,6 @@ function DiffCtrl($scope, $http) {
     $scope.diff = function () {
         $http.get("/vdiff/" + $scope.v1 + "/" + $scope.v2)
             .success(function (data, status, headers, config) {
-                console.log(data);
                 $scope.added = sortObject(data.added);
                 $scope.dropped = sortObject(data.dropped);
                 $scope.changed = data.changed;
@@ -15,12 +14,10 @@ function DiffCtrl($scope, $http) {
 
     };
 
-    $scope.init = function() {
+    $scope.init = function () {
         $http.get("/vdiff/tags")
             .success(function (data, status, headers, config) {
-              //  $scope.$apply(function () {
-                    $scope.optionsList = angular.fromJson(data);
-              //  });
+                $scope.optionsList = angular.fromJson(data);
             })
             .error(function (data, status, headers, config) {
                 console.log("Status-init: " + status);
@@ -48,4 +45,3 @@ function sortObject(o) {
     return sorted;
 }
 
-console.log("foo");
