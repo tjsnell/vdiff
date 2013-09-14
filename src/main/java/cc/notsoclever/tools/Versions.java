@@ -7,7 +7,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.lang.model.element.Name;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -75,6 +74,32 @@ public class Versions {
       });
    }
 
+   public String getTags() throws Exception {
+      LOG.error("Get TAGS");
+      URL url = new URL(TAGS_URL);
+      HttpURLConnection c = (HttpURLConnection) url.openConnection();
+      c.setRequestMethod("GET");
+      c.setRequestProperty("Content-length", "0");
+      c.setUseCaches(false);
+      c.setAllowUserInteraction(false);
+      c.connect();
+      int status = c.getResponseCode();
+
+      switch (status) {
+         case 200:
+         case 201:
+            BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+               sb.append(line).append("\n");
+            }
+            br.close();
+            return sb.toString();
+      }
+      return null;
+   }
+
    private void diffVersions() {
 
       Set<String> versions1Keys = versions1.keySet();
@@ -119,32 +144,6 @@ public class Versions {
             }
          }
       }
-   }
-
-   public String getTags() throws Exception {
-      LOG.error("Get TAGS");
-      URL url = new URL(TAGS_URL);
-      HttpURLConnection c = (HttpURLConnection) url.openConnection();
-      c.setRequestMethod("GET");
-      c.setRequestProperty("Content-length", "0");
-      c.setUseCaches(false);
-      c.setAllowUserInteraction(false);
-      c.connect();
-      int status = c.getResponseCode();
-
-      switch (status) {
-         case 200:
-         case 201:
-            BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-               sb.append(line + "\n");
-            }
-            br.close();
-            return sb.toString();
-      }
-      return null;
    }
 
 
