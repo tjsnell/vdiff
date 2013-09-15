@@ -1,44 +1,44 @@
 function DiffCtrl($scope, $http) {
 
     $scope.diff = function () {
-        $scope.$evalAsync(
-            $("body").css("cursor", "wait")
-        );
+//        $scope.$evalAsync(
+//            $("body").css("cursor", "wait")
+//        );
         $http.get("/vdiff/" + $scope.v1 + "/" + $scope.v2)
             .success(function (data, status, headers, config) {
                 $scope.added = sortObject(data.added);
                 $scope.dropped = sortObject(data.dropped);
                 $scope.changed = data.changed;
                 $scope.unchanged = sortObject(data.unChanged);
-                $scope.$evalAsync(
-                    $("body").css("cursor", "default")
-                )
+//                $scope.$evalAsync(
+//                    $("body").css("cursor", "default")
+//                )
             })
             .error(function (data, status, headers, config) {
                 console.log("Status: " + status);
-                $scope.$evalAsync(
-                    $("body").css("cursor", "default")
-                );
+//                $scope.$evalAsync(
+//                    $("body").css("cursor", "default")
+//                );
             });
 
     };
 
     $scope.init = function () {
-        $scope.$evalAsync(
-            $("body").css("cursor", "wait")
-        );
+//        $scope.$evalAsync(
+//            $("body").css("cursor", "wait")
+//        );
         $http.get("/vdiff/tags")
             .success(function (data, status, headers, config) {
                 $scope.optionsList = angular.fromJson(data);
-                $scope.$evalAsync(
-                    $("body").css("cursor", "default")
-                )
+//                $scope.$evalAsync(
+//                    $("body").css("cursor", "default")
+//                )
             })
             .error(function (data, status, headers, config) {
                 console.log("Status-init: " + status);
-                $scope.$evalAsync(
-                    $("body").css("cursor", "default")
-                )
+//                $scope.$evalAsync(
+//                    $("body").css("cursor", "default")
+//                )
             });
     };
 
