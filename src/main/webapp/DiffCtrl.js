@@ -25,7 +25,7 @@ function DiffCtrl($scope, $http) {
 
     $scope.init = function () {
 //        $scope.$evalAsync(
-//            $("body").css("cursor", "wait")
+            $("body").css("cursor", "wait")
 //        );
         $http.get("/vdiff/tags")
             .success(function (data, status, headers, config) {
