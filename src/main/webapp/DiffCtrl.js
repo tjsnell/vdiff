@@ -1,4 +1,4 @@
-function DiffCtrl($scope, $http) {
+function DiffCtrl($scope, $http, $routeParams) {
 
     $scope.diff = function () {
         $("body").css("cursor", "wait");
@@ -26,6 +26,8 @@ function DiffCtrl($scope, $http) {
     };
 
     $scope.init = function () {
+        if ($routeParams['v1'])
+            console.log($routeParams['v1']);
         $("body").css("cursor", "wait");
         $http.get("/vdiff/tags")
             .success(function (data, status, headers, config) {
