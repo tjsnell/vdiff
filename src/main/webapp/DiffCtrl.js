@@ -44,7 +44,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
         if (v1 != null && v2 != null) {
             $scope.v1 = v1;
             $scope.v2 = v2;
-            diff();
+            $scope.diff();
         }
         $("body").css("cursor", "wait");
         $http.get("/vdiff/tags")
