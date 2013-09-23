@@ -3,6 +3,7 @@
 angular.module('myApp', [], function($locationProvider){
     //enable html5 mode
     $locationProvider.html5Mode(true);
+    console.log("INIT the location Provider")
 });
 
 function DiffCtrl($scope, $http, $routeParams, $location) {
@@ -39,6 +40,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
             console.log($location);
         var vv1 = $location.search().v1;
         console.log(vv1);
+        console.log($location.search()["v1"]);
 
         $("body").css("cursor", "wait");
         $http.get("/vdiff/tags")
