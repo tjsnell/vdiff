@@ -9,7 +9,9 @@ function DiffCtrl($scope, $http) {
                 $scope.changed = data.changed;
                 $scope.unchanged = sortObject(data.unChanged);
 
-                $scope.$apply();
+                $scope.addCount = data.added.length;
+                $scope.droppedCount = data.dropped.length;
+                $scope.unchangedCount = data.unChanged.length;
 
                 $("body").css("cursor", "default");
             })
