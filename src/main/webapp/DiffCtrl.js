@@ -9,9 +9,9 @@ function DiffCtrl($scope, $http) {
                 $scope.changed = data.changed;
                 $scope.unchanged = sortObject(data.unChanged);
 
-                $scope.addCount = data.added.length;
-                $scope.droppedCount = data.dropped.length;
-                $scope.unchangedCount = data.unChanged.length;
+                $scope.addedCount = Object.keys(data.added).length;
+                $scope.droppedCount = Object.keys(data.dropped).length
+                $scope.unchangedCount =  Object.keys(data.unChanged).length
 
                 console.log(data);
                 console.log(Object.keys(data.added).length);
