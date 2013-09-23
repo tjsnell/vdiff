@@ -21,9 +21,6 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
                 $scope.droppedCount = Object.keys(data.dropped).length
                 $scope.unchangedCount =  Object.keys(data.unChanged).length
 
-                console.log(data);
-                console.log(Object.keys(data.added).length);
-
                 $("body").css("cursor", "default");
             })
             .error(function (data, status, headers, config) {
@@ -34,10 +31,6 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
     };
 
     $scope.init = function () {
-        if ("v1" in $routeParams)
-            console.log($routeParams['v1']);
-        else
-            console.log($location);
         var v1 = $location.search().v1;
         var v2 = $location.search().v2;
 
