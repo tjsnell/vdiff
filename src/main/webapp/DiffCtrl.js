@@ -25,12 +25,11 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
 
     };
 
-    $scope.init = function ($location) {
+    $scope.init = function () {
         if ("v1" in $routeParams)
             console.log($routeParams['v1']);
         else
             console.log($location);
-            console.log("V1 = " + $location.hash["v1"]);
         var vv1 = $location.search('v1');
         console.log(vv1);
 
