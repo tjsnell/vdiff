@@ -30,7 +30,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
             console.log($routeParams['v1']);
         else
             console.log($location);
-        var vv1 = $location.search('v1');
+        var vv1 = $location.search()['v1'];
         console.log(vv1);
 
         $("body").css("cursor", "wait");
