@@ -9,6 +9,8 @@ function DiffCtrl($scope, $http) {
                 $scope.changed = data.changed;
                 $scope.unchanged = sortObject(data.unChanged);
 
+                $scope.$apply();
+
                 $("body").css("cursor", "default");
             })
             .error(function (data, status, headers, config) {
