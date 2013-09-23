@@ -14,7 +14,7 @@ function DiffCtrl($scope, $http) {
                 $scope.unchangedCount = data.unChanged.length;
 
                 console.log(data);
-                console.log(Object.keys(data).length);
+                console.log(Object.keys(data.added).length);
 
                 $("body").css("cursor", "default");
             })
