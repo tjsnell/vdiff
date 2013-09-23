@@ -1,3 +1,10 @@
+
+
+angular.module('myApp', [], function($locationProvider){
+    //enable html5 mode
+    $locationProvider.html5Mode(true);
+});
+
 function DiffCtrl($scope, $http, $routeParams, $location) {
 
     $scope.diff = function () {
