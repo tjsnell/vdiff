@@ -29,7 +29,7 @@ function DiffCtrl($scope, $http, $routeParams) {
         if ("v1" in $routeParams)
             console.log($routeParams['v1']);
         else
-            console.log("No param found");
+            console.log($routeParams);
         $("body").css("cursor", "wait");
         $http.get("/vdiff/tags")
             .success(function (data, status, headers, config) {
