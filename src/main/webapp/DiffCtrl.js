@@ -26,7 +26,7 @@ function DiffCtrl($scope, $http, $routeParams) {
     };
 
     $scope.init = function () {
-        if ($routeParams['v1'])
+        if ("v1" in $routeParams)
             console.log($routeParams['v1']);
         else
             console.log("No param found");
