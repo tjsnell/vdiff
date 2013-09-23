@@ -30,7 +30,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
             console.log($routeParams['v1']);
         else
             console.log($location);
-            console.log($location.search("v1"));
+            console.log("V1 = " + $location.search("v1"));
         $("body").css("cursor", "wait");
         $http.get("/vdiff/tags")
             .success(function (data, status, headers, config) {
