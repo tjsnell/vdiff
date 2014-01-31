@@ -10,7 +10,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
 
     $scope.diff = function () {
         $("body").css("cursor", "wait");
-        $http.get("/vdiff/" + $scope.v1 + "/" + $scope.v2)
+        $http.get(location.pathname + "vdiff/compare/" + $scope.cn + "/" + $scope.v1 + "/" + $scope.v2)
             .success(function (data, status, headers, config) {
                 $scope.added = sortObject(data.added);
                 $scope.dropped = sortObject(data.dropped);
@@ -30,7 +30,9 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
 
     };
 
-    $scope.init = function () {
+    $scope.init = function (cn) {
+        $scope.cn = cn;
+
         var v1 = $location.search().v1;
         var v2 = $location.search().v2;
 
@@ -40,7 +42,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
             $scope.diff();
         }
         $("body").css("cursor", "wait");
-        $http.get("/vdiff/tags")
+        $http.get(location.pathname + "vdiff/tags/" + $scope.cn)
             .success(function (data, status, headers, config) {
                 $scope.optionsList = angular.fromJson(data);
                 $("body").css("cursor", "default");
@@ -71,4 +73,5 @@ function sortObject(o) {
     }
     return sorted;
 }
+
 

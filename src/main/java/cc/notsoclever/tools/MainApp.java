@@ -11,7 +11,7 @@ public class MainApp {
    public static void main(String... args) throws Exception {
       Main main = new Main();
 
-      ApplicationContext context = new ClassPathXmlApplicationContext("application.xml");
+      //ApplicationContext context = new ClassPathXmlApplicationContext("application.xml");
 
 //      main.bind("staticPageHandler", context.getBean("staticPageHandler"));
 

@@ -15,8 +15,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,14 +30,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @JsonIgnoreProperties({"versions1", "versions2"})
 public class Versions {
    static Logger LOG = Logger.getLogger(Versions.class.getName());
 
-   public static String POM_URL = "https://raw.github.com/apache/camel/camel-{ver}/parent/pom.xml";
-   public static String TAGS_URL = "https://api.github.com/repos/apache/camel/tags";
+   public static final String POM_URL = "https://raw.github.com/apache/{name}/{name}-{ver}/parent/pom.xml";
+   public static final String POM2_URL = "https://raw.github.com/apache/{name}/{name}-{ver}/pom.xml";
+   public static final String TAGS_URL = "https://api.github.com/repos/apache/{name}/tags";
+
+   private static final Pattern VERSION_PROP_REGEX = Pattern.compile("^(.*).version$");
+   private static final Pattern VERSION_VALUE_REGEX = Pattern.compile("^[\\(\\[]?\\d[0-9A-Za-z\\-\\.\\,\\s]*[\\)\\]]?$");
+   
+   private String name;
+
    private int totalDropped;
    private int totalAdded;
    private int totalChanged;
@@ -52,16 +63,24 @@ public class Versions {
    private Map<String, String> versions2 = new HashMap<String, String>();
    private Map<String, String> versions1 = new HashMap<String, String>();
 
+   public Versions() {
+      this("camel");
+   }
+   
+   public Versions(String name) {
+      this.name = name;
+   }
+   
    public void compare(String versions1Tag, String versions2Tag) throws Exception {
       LOG.info("Comparing version " + versions1Tag + " and " + versions2Tag);
       unChanged = new HashMap<String, String>();
       changed = new ArrayList<List<String>>();
 
-      this.v1Tag = versions1Tag;
-      this.v2Tag = versions2Tag;
+      this.v1Tag = versions1Tag.startsWith(name) ? versions1Tag.substring(name.length() + 1) : versions1Tag;
+      this.v2Tag = versions2Tag.startsWith(name) ? versions2Tag.substring(name.length() + 1) : versions2Tag;
 
-      versions1 = loadVersions(versions1Tag);
-      versions2 = loadVersions(versions2Tag);
+      versions1 = loadVersions(v1Tag);
+      versions2 = loadVersions(v2Tag);
       diffVersions();
 
       Collections.sort(changed, new Comparator<Object>() {
@@ -75,8 +94,9 @@ public class Versions {
    }
 
    public String getTags() throws Exception {
-      LOG.error("Get TAGS");
-      URL url = new URL(TAGS_URL);
+      LOG.info("Get TAGS");
+      
+      URL url = new URL(TAGS_URL.replace("{name}", name));
       HttpURLConnection c = (HttpURLConnection) url.openConnection();
       c.setRequestMethod("GET");
       c.setRequestProperty("Content-length", "0");
@@ -148,12 +168,26 @@ public class Versions {
 
 
    private Map<String, String> loadVersions(String version) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-      URL url = new URL(POM_URL.replace("{ver}", version));
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
-      Document doc = builder.parse(conn.getInputStream());
+      
+      URL url = null;
+      InputStream in = null;
+      try { 
+         url = new URL(POM_URL.replace("{name}", name).replace("{ver}", version));
+         in = url.openConnection().getInputStream();
+       } catch (IOException e) {
+         LOG.error("Unable to read from " + url);
+         try {
+            url = new URL(POM2_URL.replace("{name}", name).replace("{ver}", version));
+            in = url.openConnection().getInputStream();
+         } catch (IOException e2) {
+            LOG.error("Unable to read from " + url);
+            throw e2;
+         }
+      }
+
+      Document doc = builder.parse(in);
 
       XPathFactory xPathfactory = XPathFactory.newInstance();
       XPath xpath = xPathfactory.newXPath();
@@ -167,11 +201,14 @@ public class Versions {
       for (int i = 0; i < nodes.getLength(); i++) {
          Node node = nodes.item(i);
          String nodeName = node.getNodeName();
-         if (nodeName.startsWith("camel.osgi")) {
-            break;
+         Matcher mp = VERSION_PROP_REGEX.matcher(nodeName); 
+         if (mp.find()) {
+             String nodeValue = node.getChildNodes().item(0).getNodeValue();
+             Matcher mv = VERSION_VALUE_REGEX.matcher(nodeValue);
+             if (mv.find()) {
+                versions.put(mp.group(1), nodeValue);
+             }
          }
-         String nodeValue = node.getChildNodes().item(0).getNodeValue();
-         versions.put(nodeName.replace("-version", ""), nodeValue);
       }
       return versions;
    }

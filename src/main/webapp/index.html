@@ -2,7 +2,7 @@
 <html lang="en" ng-app="myApp" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
-    <title>Camel Package Version Diff Engine</title>
+    <title>Package Version Diff Engine</title>
     <script src="js/jquery.js"></script>
     <script src="lib/angular.min.107.js"></script>
     <script src="lib/bootstrap/js/bootstrap.js"></script>
@@ -16,6 +16,7 @@
             display: none;
         }
     </style>
+<!-- disabling this during tests
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -26,20 +27,37 @@
         ga('send', 'pageview');
 
     </script>
-</head>
-<body ng-controller="DiffCtrl" data-ng-init="init()">
+-->
+    <script>
+        dp = window.location.search.indexOf("?"); 
+        name = window.location.search.substring(dp > 0 ? dp : 1);
 
+        // validate name
+        if (!name.match(/^[a-zA-Z0-9\-]+$/)) {
+            // default to camel
+            name = "camel";
+        }
+    </script>
+</head>
+<script>
+document.write("<body ng-controller=\"DiffCtrl\" data-ng-init=\"init('" + name + "')\">");
+</script>
 <div class="container">
     <form ng-submit="diff()">
         <p>
 
-        <h1>Camel Dependencies Version Differences</h1>
+        <script>
+            document.write("<h1>" + name + " Dependencies Version Differences</h1>");
+        </script>
         <br/>
+<!-- may need to update the location
         <h5>
+
             <a href="http://code.notsoclever.cc/camel-release-package-version-differences/">
                 http://code.notsoclever.cc/camel-release-package-version-differences/
             </a>
         </h5>
+-->
         <p>
             Older Version: <select name="option" ng-model="v1" ng-options="o for o in optionsList"></select>
         <p>
@@ -55,6 +73,10 @@
     <h3>Added Packages ({{ addedCount }})</h3>
     <br/>
     <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="added">
+        <tr>
+            <th>Name</th>
+            <th>Version</th>
+        </tr>
         <tr ng-repeat="(key, value) in added">
             <td> {{key}}</td>
             <td> {{ value }}</td>
@@ -66,6 +88,10 @@
     <h3>Dropped Packages ({{ droppedCount }})</h3>
     <br/>
     <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="dropped">
+        <tr>
+            <th>Name</th>
+            <th>Version</th>
+        </tr>
         <tr ng-repeat="(key, value) in dropped">
             <td> {{key}}</td>
             <td> {{ value }}</td>
@@ -76,6 +102,11 @@
     <h3>Changed Packages ({{ changed.length }})</h3>
     <br/>
     <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="changed">
+        <tr>
+            <th>Name</th>
+            <th>Old Version</th>
+            <th>New Version</th>
+        </tr>
         <tr ng-repeat="pkg in changed">
             <td> {{pkg[0]}}</td>
             <td> {{pkg[1]}}</td>
@@ -86,6 +117,10 @@
     <h3>Unchanged Packages ({{ unchangedCount }})</h3>
     <br/>
     <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="unchanged">
+        <tr>
+            <th>Name</th>
+            <th>Version</th>
+        </tr>
         <tr ng-repeat="(key, value) in unchanged">
             <td> {{key}}</td>
             <td> {{ value }}</td>
