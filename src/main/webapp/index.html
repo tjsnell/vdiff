@@ -59,9 +59,9 @@ document.write("<body ng-controller=\"DiffCtrl\" data-ng-init=\"init('" + name +
         </h5>
 -->
         <p>
-            Older Version: <select name="option" ng-model="v1" ng-options="o for o in optionsList"></select>
+            Older Version: <select name="option" ng-model="v1" ng-options="o for o in optionsList1" ng-change="changed1()"><option value="">-- choose version --</option></select>
         <p>
-            Newer Version: <select name="option" ng-model="v2" ng-options="o for o in optionsList"></select>
+            Newer Version: <select name="option" ng-model="v2" ng-options="o for o in optionsList2" ng-change="changed2()"><option value="">-- choose version --</option></select>
         <p>
             <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}" ng-click="diff()">
                     <i class="glyphicon glyphicon-plus"></i>

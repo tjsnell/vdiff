@@ -9,6 +9,10 @@ angular.module('myApp', [], function($locationProvider){
 function DiffCtrl($scope, $http, $routeParams, $location) {
 
     $scope.diff = function () {
+        if (!$scope.v1 || !$scope.v2) {
+            alert("Both versions must be set");
+            return;
+        }
         $("body").css("cursor", "wait");
         $http.get(location.pathname + "vdiff/compare/" + $scope.cn + "/" + $scope.v1 + "/" + $scope.v2)
             .success(function (data, status, headers, config) {
@@ -45,12 +49,42 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
         $http.get(location.pathname + "vdiff/tags/" + $scope.cn)
             .success(function (data, status, headers, config) {
                 $scope.optionsList = angular.fromJson(data);
+                $scope.optionsList1 = $scope.optionsList;
+                $scope.optionsList2 = $scope.optionsList;
                 $("body").css("cursor", "default");
             })
             .error(function (data, status, headers, config) {
                 console.log("Status-init: " + status);
                 $("body").css("cursor", "default");
             });
+    };
+
+    $scope.changed1 = function() {
+        if ($scope.v1) {
+            var rp = true;
+            $scope.optionsList2 = $scope.optionsList.filter(function(item) {
+                if (rp && $scope.v1 == item) {
+                    rp = false;
+                }
+                return rp;
+            });
+        } else {
+            $scope.optionsList2 = $scope.optionsList;
+        }
+     }
+
+    $scope.changed2 = function() {
+	if ($scope.v2) {
+            var rp = false;
+            $scope.optionsList1 = $scope.optionsList.filter(function(item) {
+                if (!rp && $scope.v2 == item) {
+                    rp = true;
+                }
+                return rp;
+            });
+        } else {
+            $scope.optionsList1 = $scope.optionsList;
+        }
     };
 
 }
@@ -73,5 +107,3 @@ function sortObject(o) {
     }
     return sorted;
 }
-
-
