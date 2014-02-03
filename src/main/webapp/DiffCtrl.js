@@ -65,6 +65,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
             $scope.optionsList2 = $scope.optionsList.filter(function(item) {
                 if (rp && $scope.v1 == item) {
                     rp = false;
+                    return false;
                 }
                 return rp;
             });
@@ -79,6 +80,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
             $scope.optionsList1 = $scope.optionsList.filter(function(item) {
                 if (!rp && $scope.v2 == item) {
                     rp = true;
+                    return false;
                 }
                 return rp;
             });
