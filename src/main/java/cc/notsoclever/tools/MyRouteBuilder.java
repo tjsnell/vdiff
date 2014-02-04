@@ -9,7 +9,7 @@ public class MyRouteBuilder extends RouteBuilder {
 
    public void configure() {
 
-      from("restlet:http:/tags/{cn}?restletMethods=get")
+      from("restlet:///tags/{cn}?restletMethods=get")
             .process(new Processor() {
                @Override
                public void process(Exchange exchange) throws Exception {
@@ -23,7 +23,7 @@ public class MyRouteBuilder extends RouteBuilder {
                }
             });
 
-      from("restlet:http:/compare/{cn}/{v1}/{v2}?restletMethods=get")
+      from("restlet:///compare/{cn}/{v1}/{v2}?restletMethods=get")
             .process(new Processor() {
                @Override
                public void process(Exchange exchange) throws Exception {

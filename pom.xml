@@ -17,17 +17,31 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!--<camel.version>2.12.0</camel.version>-->
-        <!--<spring.version>3.1.4.RELEASE</spring.version>-->
-        <!--<restlet.version>2.1.4</restlet.version>-->
 
-        <camel.version>2.10.6</camel.version>
-        <spring.version>3.0.7.RELEASE</spring.version>
-        <restlet.version>2.0.14</restlet.version>
+        <camel.version>2.12.2</camel.version>
+        <spring.version>3.1.4.RELEASE</spring.version>
+        <restlet.version>2.1.6</restlet.version>
 
     </properties>
 
     <dependencies>
+        <!-- restlet dependency -->
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.servlet</artifactId>
+            <version>${restlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.spring</artifactId>
+            <version>${restlet.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+           </exclusions>
+        </dependency>
 
         <!-- Camel Dependencies -->
         <dependency>
@@ -40,6 +54,20 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring</artifactId>
             <version>${camel.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-tx</artifactId>
+                </exclusion>
+           </exclusions>
         </dependency>
 
         <dependency>
@@ -48,28 +76,8 @@
             <version>${camel.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.apache.camel</groupId>-->
-            <!--<artifactId>camel-jackson</artifactId>-->
-            <!--<version>${camel.version}</version>-->
-        <!--</dependency>-->
-
-
         <dependency>
-            <groupId>org.restlet.jee</groupId>
-            <artifactId>org.restlet.ext.servlet</artifactId>
-            <version>${restlet.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.restlet.jee</groupId>
-            <artifactId>org.restlet.ext.spring</artifactId>
-            <version>${restlet.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.camel.fix</groupId>
+            <groupId>org.apache.camel</groupId>
             <artifactId>camel-restlet</artifactId>
             <version>${camel.version}</version>
         </dependency>
@@ -82,25 +90,18 @@
             <version>${spring.version}</version>
         </dependency>
 
-        <!-- Restlet depends on 3.0.x so we have to force everything to current -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-asm</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
+<!--
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
+-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -151,12 +152,6 @@
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
         </repository>
-
-        <repository>
-            <id>repo</id>
-            <url>file://${project.basedir}/repo</url>
-        </repository>
-
     </repositories>
 
     <build>
