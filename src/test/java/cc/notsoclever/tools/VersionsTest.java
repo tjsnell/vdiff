@@ -134,6 +134,38 @@ public class VersionsTest extends Assert {
   }
   
   @Test
+  public void compareAtmosphere() throws Exception {
+    if (!testable) {
+      LOG.error("No Internet connection available; Skip testing");
+      return;
+    }
+    Versions versions = new Versions("Atmosphere", "atmosphere");
+    
+    versions.compare("project-2.1.7", "project-2.2.0");
+    logComparisonResult(versions);
+
+    Map<String, String> added = versions.getAdded();
+    assertNotNull(added);
+    assertEquals(0, added.size());
+    assertEquals(0, versions.getTotalAdded());
+
+    Map<String, String> dropped = versions.getDropped();
+    assertNotNull(dropped);
+    assertEquals(0, dropped.size());
+    assertEquals(0, versions.getTotalDropped());
+
+    List<List<String>> changed = versions.getChanged();
+    assertNotNull(changed);
+    assertEquals(3, changed.size());
+    assertEquals(3, versions.getTotalChanged());
+    
+    Map<String, String> unchanged = versions.getUnChanged();
+    assertNotNull(unchanged);
+    assertEquals(32, unchanged.size());
+    assertEquals(32, versions.getTotal() - 3);
+  }
+  
+  @Test
   public void testAtmosphereTags() throws Exception {
     if (!testable) {
       LOG.error("No Internet connection available; Skip testing");

@@ -22,3 +22,8 @@ http://localhost:8181/version-diff/?activemq
 or explicitly setting the organization part
 http://localhost:8181/version-diff/?apache/cxf
 http://localhost:8181/version-diff/?Atmosphere/atmosphere
+
+
+Any project hosted at github which specifies its depending version properties at its root
+pom.xml or at parent/pom.xml can be comapred.
+
