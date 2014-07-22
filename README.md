@@ -1,7 +1,7 @@
 vdiff
 =====
 
-Apache Release Package Version Diffs
+Apache and other Release Package Version Diffs
 
 Forked from https://github.com/tjsnell/vdiff
 
@@ -19,3 +19,6 @@ http://localhost:8181/version-diff/?cxf
 http://localhost:8181/version-diff/?activemq
 ...
 
+or explicitly setting the organization part
+http://localhost:8181/version-diff/?apache/cxf
+http://localhost:8181/version-diff/?Atmosphere/atmosphere

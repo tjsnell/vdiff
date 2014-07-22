@@ -29,25 +29,39 @@
     </script>
 -->
     <script>
-        dp = window.location.search.indexOf("?"); 
-        name = window.location.search.substring(dp > 0 ? dp : 1);
+        dp = window.location.search.indexOf("?");
+        name = decodeURIComponent(window.location.search.substring(dp > 0 ? dp : 1));
+        org = "apache";
+	console.log("provided argument: " + name);
 
         // validate name
-        if (!name.match(/^[a-zA-Z0-9\-]+$/)) {
-            // default to camel
+        if (!name.match(/^[a-zA-Z0-9\-/]+$/)) {
+            // for an invalid string, default to camel
             name = "camel";
         }
+	spos = name.indexOf('/');
+	if (spos > 0) {
+            // extract the org part
+            org = name.substring(0, spos);
+            name = name.substring(spos + 1);
+            // ignore the trailing part if any
+            spos = name.indexOf('/');
+            if (spos > 0) {
+                name = name.substring(0, spos);
+            }
+        }
+	console.log("decoded arguments: org=" + org + "; name=" + name);
     </script>
 </head>
 <script>
-document.write("<body ng-controller=\"DiffCtrl\" data-ng-init=\"init('" + name + "')\">");
+document.write("<body ng-controller=\"DiffCtrl\" data-ng-init=\"init('" + org + "', '" + name + "')\">");
 </script>
 <div class="container">
     <form ng-submit="diff()">
         <p>
 
         <script>
-            document.write("<h1>" + name + " Dependencies Version Differences</h1>");
+            document.write("<h1>" + org + "/" + name + " Dependencies Version Differences</h1>");
         </script>
         <br/>
 <!-- may need to update the location

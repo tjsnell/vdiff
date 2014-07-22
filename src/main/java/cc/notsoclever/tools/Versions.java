@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,15 +39,18 @@ import java.util.regex.Pattern;
 public class Versions {
    static Logger LOG = Logger.getLogger(Versions.class.getName());
 
-   public static final String POM_URL = "https://raw.github.com/apache/{name}/{name}-{ver}/parent/pom.xml";
-   public static final String POM2_URL = "https://raw.github.com/apache/{name}/{name}-{ver}/pom.xml";
-   public static final String TAGS_URL = "https://api.github.com/repos/apache/{name}/tags";
+   public static final String POM_URL = "https://raw.github.com/{0}/{1}/{1}-{2}/parent/pom.xml";
+   public static final String POM2_URL = "https://raw.github.com/{0}/{1}/{1}-{2}/pom.xml";
+   public static final String TAGS_URL = "https://api.github.com/repos/{0}/{1}/tags";
 
    private static final Pattern VERSION_PROP_REGEX = Pattern.compile("^(.*).version$");
    private static final Pattern VERSION_VALUE_REGEX = Pattern.compile("^[\\(\\[]?\\d[0-9A-Za-z\\-\\.\\,\\s]*[\\)\\]]?$");
+   private static final String DEFAULT_ORG = "apache";
+   private static final String DEFAULT_NAME = "camel";
    
+   private String org;
    private String name;
-
+   
    private int totalDropped;
    private int totalAdded;
    private int totalChanged;
@@ -64,11 +68,16 @@ public class Versions {
    private Map<String, String> versions1 = new HashMap<String, String>();
 
    public Versions() {
-      this("camel");
+      this(DEFAULT_ORG, DEFAULT_NAME);
    }
    
    public Versions(String name) {
-      this.name = name;
+	   this(DEFAULT_ORG, name);
+   }
+
+   public Versions(String org, String name) {
+	   this.org = org;
+	   this.name = name;
    }
    
    public void compare(String versions1Tag, String versions2Tag) throws Exception {
@@ -96,7 +105,7 @@ public class Versions {
    public String getTags() throws Exception {
       LOG.info("Get TAGS");
       
-      URL url = new URL(TAGS_URL.replace("{name}", name));
+      URL url = new URL(MessageFormat.format(TAGS_URL, new Object[]{org, name}));
       HttpURLConnection c = (HttpURLConnection) url.openConnection();
       c.setRequestMethod("GET");
       c.setRequestProperty("Content-length", "0");
@@ -174,12 +183,12 @@ public class Versions {
       URL url = null;
       InputStream in = null;
       try { 
-         url = new URL(POM_URL.replace("{name}", name).replace("{ver}", version));
+         url = new URL(MessageFormat.format(POM_URL, new Object[]{org, name, version}));
          in = url.openConnection().getInputStream();
        } catch (IOException e) {
          LOG.error("Unable to read from " + url);
          try {
-            url = new URL(POM2_URL.replace("{name}", name).replace("{ver}", version));
+            url = new URL(MessageFormat.format(POM2_URL, new Object[]{org, name, version}));
             in = url.openConnection().getInputStream();
          } catch (IOException e2) {
             LOG.error("Unable to read from " + url);

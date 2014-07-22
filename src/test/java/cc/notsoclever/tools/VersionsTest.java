@@ -18,7 +18,7 @@ public class VersionsTest extends Assert {
   public static void checkConnection() {
     InputStream in = null;
     try {
-      URL testTarget = new URL("https://raw.github.com/apache/");
+      URL testTarget = new URL("https://api.github.com/repos/apache/camel/tags");
       in = testTarget.openStream();
       testable = true;
     } catch (Exception e) {
@@ -131,6 +131,23 @@ public class VersionsTest extends Assert {
     assertNotNull(unchanged);
     assertEquals(76, unchanged.size());
     assertEquals(76, versions.getTotal() - 1 - 8);
+  }
+  
+  @Test
+  public void testAtmosphereTags() throws Exception {
+    if (!testable) {
+      LOG.error("No Internet connection available; Skip testing");
+      return;
+    }
+        Versions versions = new Versions("Atmosphere", "atmosphere");
+
+        List<String> versionTags = VersionsUtils.extractVersions(versions.getTags(), "atmosphere");
+        for (String v : versionTags) {
+          LOG.info("finding tag: " + v);  
+        }
+        // check some random valid version
+        assertTrue(versionTags.contains("project-2.1.7"));
+        assertTrue(versionTags.contains("project-2.2.0"));
   }
   
   private static void logComparisonResult(Versions versions) {
