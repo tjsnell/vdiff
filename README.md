@@ -14,13 +14,19 @@ Then, using your browser to open
 http://localhost:8181/version-diff/
 
 or 
+
 http://localhost:8181/version-diff/?camel
+
 http://localhost:8181/version-diff/?cxf
+
 http://localhost:8181/version-diff/?activemq
+
 ...
 
 or explicitly setting the organization part
+
 http://localhost:8181/version-diff/?apache/cxf
+
 http://localhost:8181/version-diff/?Atmosphere/atmosphere
 
 
