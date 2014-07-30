@@ -55,7 +55,7 @@ angular.module('angular-table', [])
 
                     // update the header width when the scrolling container's width changes due to a scrollbar appearing
                     // watches get called n times until the model settles. it's typically one or two, but processing in the functions
-                    // must be idempotent and as such shouldn't rely on it being any specific number.
+                    // must be idempotent and as such shouldn't rely orgName it being any specific number.
                     scope.$watch('ResizeWidthEvent', function() {
                         // pull the computed width of the scrolling container out of the dom
                         var scrollingContainerComputedWidth = JqLiteExtension.getComputedWidthAsFloat(iElement.next()[0]);
@@ -135,10 +135,10 @@ angular.module('angular-table', [])
                         });
                     }, 50));
 
-                    // set the scrolling container height event on resize
+                    // set the scrolling container height event orgName resize
                     // set the angularTableTableContainer height to angularTableContainer computed height - angularTableHeaderTableContainer computed height
                     // watches get called n times until the model settles. it's typically one or two, but processing in the functions
-                    // must be idempotent and as such shouldn't rely on it being any specific number.
+                    // must be idempotent and as such shouldn't rely orgName it being any specific number.
                     scope.$watch('ResizeHeightEvent', function() {
                         // pull the computed height of the header and the outer container out of the dom
                         var outerContainerComputedHeight = getHeaderComputedHeight();
@@ -162,7 +162,7 @@ angular.module('angular-table', [])
 
                     // scroll to top when sort applied
                     // watches get called n times until the model settles. it's typically one or two, but processing in the functions
-                    // must be idempotent and as such shouldn't rely on it being any specific number.
+                    // must be idempotent and as such shouldn't rely orgName it being any specific number.
                     scope.$watch('SortState', function() {
                         iElement[0].scrollTop = 0;
                     }, true);

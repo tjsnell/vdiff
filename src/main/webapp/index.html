@@ -1,145 +1,123 @@
 <!doctype html>
 <html lang="en" ng-app="myApp" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="utf-8">
-    <title>Package Version Diff Engine</title>
-    <script src="js/jquery.js"></script>
-    <script src="lib/angular.min.107.js"></script>
-    <script src="lib/bootstrap/js/bootstrap.js"></script>
-    <script src="js/lib/angular-table.js"></script>
-    <script src="DiffCtrl.js"></script>
-    <linK href="lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-    <link href="css/lib/angular-table.css" rel="stylesheet" type="text/css"/>
-    <style>
-            /* Hide Angular JS elements before initializing */
-        .ng-cloak {
-            display: none;
-        }
-    </style>
-<!-- disabling this during tests
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+   <meta charset="utf-8">
+   <title>Package Version Diff Engine</title>
+   <script src="js/jquery.js"></script>
+   <script src="lib/angular.min.107.js"></script>
+   <script src="lib/bootstrap/js/bootstrap.js"></script>
+   <script src="js/lib/angular-table.js"></script>
+   <script src="DiffCtrl.js"></script>
+   <linK href="lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+   <link href="css/lib/angular-table.css" rel="stylesheet" type="text/css"/>
+   <style>
+      /* Hide Angular JS elements before initializing */
+      .ng-cloak {
+         display: none;
+      }
+   </style>
+   <!-- disabling this during tests
+       <script>
+           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+               (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-44004299-1', 'notsoclever.cc');
-        ga('send', 'pageview');
+           ga('create', 'UA-44004299-1', 'notsoclever.cc');
+           ga('send', 'pageview');
 
-    </script>
--->
-    <script>
-        dp = window.location.search.indexOf("?");
-        name = decodeURIComponent(window.location.search.substring(dp > 0 ? dp : 1));
-        org = "apache";
-	console.log("provided argument: " + name);
+       </script>
+   -->
 
-        // validate name
-        if (!name.match(/^[a-zA-Z0-9\-/]+$/)) {
-            // for an invalid string, default to camel
-            name = "camel";
-        }
-	spos = name.indexOf('/');
-	if (spos > 0) {
-            // extract the org part
-            org = name.substring(0, spos);
-            name = name.substring(spos + 1);
-            // ignore the trailing part if any
-            spos = name.indexOf('/');
-            if (spos > 0) {
-                name = name.substring(0, spos);
-            }
-        }
-	console.log("decoded arguments: org=" + org + "; name=" + name);
-    </script>
 </head>
-<script>
-document.write("<body ng-controller=\"DiffCtrl\" data-ng-init=\"init('" + org + "', '" + name + "')\">");
-</script>
+
+<body ng-controller="DiffCtrl" data-ng-init="init()">
 <div class="container">
-    <form ng-submit="diff()">
-        <p>
+   <form ng-submit="diff()">
+      <p>
 
-        <script>
-            document.write("<h1>" + org + "/" + name + " Dependencies Version Differences</h1>");
-        </script>
-        <br/>
-<!-- may need to update the location
-        <h5>
+      <h1> {{orgName}}/{{projectName}} Dependencies Version Differences</h1>
+      <br/>
+      <!-- may need to update the location
+              <h5>
 
-            <a href="http://code.notsoclever.cc/camel-release-package-version-differences/">
-                http://code.notsoclever.cc/camel-release-package-version-differences/
-            </a>
-        </h5>
--->
-        <p>
-            Older Version: <select name="option" ng-model="v1" ng-options="o for o in optionsList1" ng-change="changed1()"><option value="">-- choose version --</option></select>
-        <p>
-            Newer Version: <select name="option" ng-model="v2" ng-options="o for o in optionsList2" ng-change="changed2()"><option value="">-- choose version --</option></select>
-        <p>
+                  <a href="http://code.notsoclever.cc/camel-release-package-version-differences/">
+                      http://code.notsoclever.cc/camel-release-package-version-differences/
+                  </a>
+              </h5>
+      -->
+      <p>
+         Older Version: <select name="option" ng-model="v1" ng-options="o for o in optionsList1" ng-change="changed1()">
+         <option value="">-- choose version --</option>
+      </select>
+      <p>
+         Newer Version: <select name="option" ng-model="v2" ng-options="o for o in optionsList2" ng-change="changed2()">
+         <option value="">-- choose version --</option>
+      </select>
+      <p>
             <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}" ng-click="diff()">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Diff</span>
             </span>
-    </form>
-    <p>
+   </form>
+   <p>
 
-    <h3>Added Packages ({{ addedCount }})</h3>
-    <br/>
-    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="added">
-        <tr>
-            <th>Name</th>
-            <th>Version</th>
-        </tr>
-        <tr ng-repeat="(key, value) in added">
-            <td> {{key}}</td>
-            <td> {{ value }}</td>
-        </tr>
-    </table>
+   <h3>Added Packages ({{ addedCount }})</h3>
+   <br/>
+   <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="added">
+      <tr>
+         <th>Name</th>
+         <th>Version</th>
+      </tr>
+      <tr ng-repeat="(key, value) in added">
+         <td> {{key}}</td>
+         <td> {{ value }}</td>
+      </tr>
+   </table>
 
-    <p/>
+   <p/>
 
-    <h3>Dropped Packages ({{ droppedCount }})</h3>
-    <br/>
-    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="dropped">
-        <tr>
-            <th>Name</th>
-            <th>Version</th>
-        </tr>
-        <tr ng-repeat="(key, value) in dropped">
-            <td> {{key}}</td>
-            <td> {{ value }}</td>
-        </tr>
-    </table>
-    <p/>
+   <h3>Dropped Packages ({{ droppedCount }})</h3>
+   <br/>
+   <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="dropped">
+      <tr>
+         <th>Name</th>
+         <th>Version</th>
+      </tr>
+      <tr ng-repeat="(key, value) in dropped">
+         <td> {{key}}</td>
+         <td> {{ value }}</td>
+      </tr>
+   </table>
+   <p/>
 
-    <h3>Changed Packages ({{ changed.length }})</h3>
-    <br/>
-    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="changed">
-        <tr>
-            <th>Name</th>
-            <th>Old Version</th>
-            <th>New Version</th>
-        </tr>
-        <tr ng-repeat="pkg in changed">
-            <td> {{pkg[0]}}</td>
-            <td> {{pkg[1]}}</td>
-            <td> {{pkg[2]}}</td>
-        </tr>
-    </table>
+   <h3>Changed Packages ({{ changed.length }})</h3>
+   <br/>
+   <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="changed">
+      <tr>
+         <th>Name</th>
+         <th>Old Version</th>
+         <th>New Version</th>
+      </tr>
+      <tr ng-repeat="pkg in changed">
+         <td> {{pkg[0]}}</td>
+         <td> {{pkg[1]}}</td>
+         <td> {{pkg[2]}}</td>
+      </tr>
+   </table>
 
-    <h3>Unchanged Packages ({{ unchangedCount }})</h3>
-    <br/>
-    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="unchanged">
-        <tr>
-            <th>Name</th>
-            <th>Version</th>
-        </tr>
-        <tr ng-repeat="(key, value) in unchanged">
-            <td> {{key}}</td>
-            <td> {{ value }}</td>
-        </tr>
-    </table>
+   <h3>Unchanged Packages ({{ unchangedCount }})</h3>
+   <br/>
+   <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="unchanged">
+      <tr>
+         <th>Name</th>
+         <th>Version</th>
+      </tr>
+      <tr ng-repeat="(key, value) in unchanged">
+         <td> {{key}}</td>
+         <td> {{ value }}</td>
+      </tr>
+   </table>
 </div>
 </body>
 </html>

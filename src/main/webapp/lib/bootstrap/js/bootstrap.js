@@ -70,7 +70,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -87,7 +87,7 @@
 
   var dismiss = '[data-dismiss="alert"]'
     , Alert = function (el) {
-        $(el).on('click', dismiss, this.close)
+        $(el).orgName('click', dismiss, this.close)
       }
 
   Alert.prototype.close = function (e) {
@@ -119,7 +119,7 @@
     }
 
     $.support.transition && $parent.hasClass('fade') ?
-      $parent.on($.support.transition.end, removeElement) :
+      $parent.orgName($.support.transition.end, removeElement) :
       removeElement()
   }
 
@@ -153,7 +153,7 @@
  /* ALERT DATA-API
   * ============== */
 
-  $(document).on('click.alert.data-api', dismiss, Alert.prototype.close)
+  $(document).orgName('click.alert.data-api', dismiss, Alert.prototype.close)
 
 }(window.jQuery);/* ============================================================
  * bootstrap-button.js v2.3.2
@@ -168,7 +168,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -253,7 +253,7 @@
  /* BUTTON DATA-API
   * =============== */
 
-  $(document).on('click.button.data-api', '[data-toggle^=button]', function (e) {
+  $(document).orgName('click.button.data-api', '[data-toggle^=button]', function (e) {
     var $btn = $(e.target)
     if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
     $btn.button('toggle')
@@ -272,7 +272,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -292,8 +292,8 @@
     this.$indicators = this.$element.find('.carousel-indicators')
     this.options = options
     this.options.pause == 'hover' && this.$element
-      .on('mouseenter', $.proxy(this.pause, this))
-      .on('mouseleave', $.proxy(this.cycle, this))
+      .orgName('mouseenter', $.proxy(this.pause, this))
+      .orgName('mouseleave', $.proxy(this.cycle, this))
   }
 
   Carousel.prototype = {
@@ -450,7 +450,7 @@
  /* CAROUSEL DATA-API
   * ================= */
 
-  $(document).on('click.carousel.data-api', '[data-slide], [data-slide-to]', function (e) {
+  $(document).orgName('click.carousel.data-api', '[data-slide], [data-slide-to]', function (e) {
     var $this = $(this), href
       , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
       , options = $.extend({}, $target.data(), $this.data())
@@ -478,7 +478,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -621,7 +621,7 @@
  /* COLLAPSE DATA-API
   * ================= */
 
-  $(document).on('click.collapse.data-api', '[data-toggle=collapse]', function (e) {
+  $(document).orgName('click.collapse.data-api', '[data-toggle=collapse]', function (e) {
     var $this = $(this), href
       , target = $this.attr('data-target')
         || e.preventDefault()
@@ -644,7 +644,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -661,8 +661,8 @@
 
   var toggle = '[data-toggle=dropdown]'
     , Dropdown = function (element) {
-        var $el = $(element).on('click.dropdown.data-api', this.toggle)
-        $('html').on('click.dropdown.data-api', function () {
+        var $el = $(element).orgName('click.dropdown.data-api', this.toggle)
+        $('html').orgName('click.dropdown.data-api', function () {
           $el.parent().removeClass('open')
         })
       }
@@ -687,7 +687,7 @@
       if (!isActive) {
         if ('ontouchstart' in document.documentElement) {
           // if mobile we we use a backdrop because click events don't delegate
-          $('<div class="dropdown-backdrop"/>').insertBefore($(this)).on('click', clearMenus)
+          $('<div class="dropdown-backdrop"/>').insertBefore($(this)).orgName('click', clearMenus)
         }
         $parent.toggleClass('open')
       }
@@ -794,10 +794,10 @@
    * =================================== */
 
   $(document)
-    .on('click.dropdown.data-api', clearMenus)
-    .on('click.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
-    .on('click.dropdown.data-api'  , toggle, Dropdown.prototype.toggle)
-    .on('keydown.dropdown.data-api', toggle + ', [role=menu]' , Dropdown.prototype.keydown)
+    .orgName('click.dropdown.data-api', clearMenus)
+    .orgName('click.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .orgName('click.dropdown.data-api'  , toggle, Dropdown.prototype.toggle)
+    .orgName('keydown.dropdown.data-api', toggle + ', [role=menu]' , Dropdown.prototype.keydown)
 
 }(window.jQuery);
 /* =========================================================
@@ -813,7 +813,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -909,7 +909,7 @@
 
     , enforceFocus: function () {
         var that = this
-        $(document).on('focusin.modal', function (e) {
+        $(document).orgName('focusin.modal', function (e) {
           if (that.$element[0] !== e.target && !that.$element.has(e.target).length) {
             that.$element.focus()
           }
@@ -919,7 +919,7 @@
     , escape: function () {
         var that = this
         if (this.isShown && this.options.keyboard) {
-          this.$element.on('keyup.dismiss.modal', function ( e ) {
+          this.$element.orgName('keyup.dismiss.modal', function ( e ) {
             e.which == 27 && that.hide()
           })
         } else if (!this.isShown) {
@@ -1031,7 +1031,7 @@
  /* MODAL DATA-API
   * ============== */
 
-  $(document).on('click.modal.data-api', '[data-toggle="modal"]', function (e) {
+  $(document).orgName('click.modal.data-api', '[data-toggle="modal"]', function (e) {
     var $this = $(this)
       , href = $this.attr('href')
       , $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
@@ -1061,7 +1061,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -1101,12 +1101,12 @@
       for (i = triggers.length; i--;) {
         trigger = triggers[i]
         if (trigger == 'click') {
-          this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
+          this.$element.orgName('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
         } else if (trigger != 'manual') {
           eventIn = trigger == 'hover' ? 'mouseenter' : 'focus'
           eventOut = trigger == 'hover' ? 'mouseleave' : 'blur'
-          this.$element.on(eventIn + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-          this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
+          this.$element.orgName(eventIn + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
+          this.$element.orgName(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
         }
       }
 
@@ -1421,7 +1421,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -1535,7 +1535,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -1555,7 +1555,7 @@
       , $element = $(element).is('body') ? $(window) : $(element)
       , href
     this.options = $.extend({}, $.fn.scrollspy.defaults, options)
-    this.$scrollElement = $element.on('scroll.scroll-spy.data-api', process)
+    this.$scrollElement = $element.orgName('scroll.scroll-spy.data-api', process)
     this.selector = (this.options.target
       || ((href = $(element).attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
       || '') + ' .nav li > a'
@@ -1676,7 +1676,7 @@
  /* SCROLLSPY DATA-API
   * ================== */
 
-  $(window).on('load', function () {
+  $(window).orgName('load', function () {
     $('[data-spy="scroll"]').each(function () {
       var $spy = $(this)
       $spy.scrollspy($spy.data())
@@ -1696,7 +1696,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -1821,7 +1821,7 @@
  /* TAB DATA-API
   * ============ */
 
-  $(document).on('click.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', function (e) {
+  $(document).orgName('click.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', function (e) {
     e.preventDefault()
     $(this).tab('show')
   })
@@ -1839,7 +1839,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -2000,19 +2000,19 @@
 
   , listen: function () {
       this.$element
-        .on('focus',    $.proxy(this.focus, this))
-        .on('blur',     $.proxy(this.blur, this))
-        .on('keypress', $.proxy(this.keypress, this))
-        .on('keyup',    $.proxy(this.keyup, this))
+        .orgName('focus',    $.proxy(this.focus, this))
+        .orgName('blur',     $.proxy(this.blur, this))
+        .orgName('keypress', $.proxy(this.keypress, this))
+        .orgName('keyup',    $.proxy(this.keyup, this))
 
       if (this.eventSupported('keydown')) {
-        this.$element.on('keydown', $.proxy(this.keydown, this))
+        this.$element.orgName('keydown', $.proxy(this.keydown, this))
       }
 
       this.$menu
-        .on('click', $.proxy(this.click, this))
-        .on('mouseenter', 'li', $.proxy(this.mouseenter, this))
-        .on('mouseleave', 'li', $.proxy(this.mouseleave, this))
+        .orgName('click', $.proxy(this.click, this))
+        .orgName('mouseenter', 'li', $.proxy(this.mouseenter, this))
+        .orgName('mouseleave', 'li', $.proxy(this.mouseleave, this))
     }
 
   , eventSupported: function(eventName) {
@@ -2154,7 +2154,7 @@
  /* TYPEAHEAD DATA-API
   * ================== */
 
-  $(document).on('focus.typeahead.data-api', '[data-provide="typeahead"]', function (e) {
+  $(document).orgName('focus.typeahead.data-api', '[data-provide="typeahead"]', function (e) {
     var $this = $(this)
     if ($this.data('typeahead')) return
     $this.typeahead($this.data())
@@ -2174,7 +2174,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed orgName an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -2192,8 +2192,8 @@
   var Affix = function (element, options) {
     this.options = $.extend({}, $.fn.affix.defaults, options)
     this.$window = $(window)
-      .on('scroll.affix.data-api', $.proxy(this.checkPosition, this))
-      .on('click.affix.data-api',  $.proxy(function () { setTimeout($.proxy(this.checkPosition, this), 1) }, this))
+      .orgName('scroll.affix.data-api', $.proxy(this.checkPosition, this))
+      .orgName('click.affix.data-api',  $.proxy(function () { setTimeout($.proxy(this.checkPosition, this), 1) }, this))
     this.$element = $(element)
     this.checkPosition()
   }
@@ -2262,7 +2262,7 @@
  /* AFFIX DATA-API
   * ============== */
 
-  $(window).on('load', function () {
+  $(window).orgName('load', function () {
     $('[data-spy="affix"]').each(function () {
       var $spy = $(this)
         , data = $spy.data()

@@ -9,12 +9,12 @@ public class MyRouteBuilder extends RouteBuilder {
 
    public void configure() {
 
-      from("restlet:///tags/{on}/{cn}?restletMethods=get")
+      from("restlet:///tags/{orgName}/{projectName}?restletMethods=get")
             .process(new Processor() {
                @Override
                public void process(Exchange exchange) throws Exception {
-                  String on = exchange.getIn().getHeader("on", String.class);
-                  String cn = exchange.getIn().getHeader("cn", String.class);
+                  String on = exchange.getIn().getHeader("orgName", String.class);
+                  String cn = exchange.getIn().getHeader("projectName", String.class);
                   Versions versions = new Versions(on, cn);
                   ObjectMapper mapper = new ObjectMapper();
                   String tags = versions.getTags();
@@ -24,12 +24,12 @@ public class MyRouteBuilder extends RouteBuilder {
                }
             });
 
-      from("restlet:///compare/{on}/{cn}/{v1}/{v2}?restletMethods=get")
+      from("restlet:///compare/{orgName}/{projectName}/{v1}/{v2}?restletMethods=get")
             .process(new Processor() {
                @Override
                public void process(Exchange exchange) throws Exception {
-                  String on = exchange.getIn().getHeader("on", String.class);
-                  String cn = exchange.getIn().getHeader("cn", String.class);
+                  String on = exchange.getIn().getHeader("orgName", String.class);
+                  String cn = exchange.getIn().getHeader("projectName", String.class);
                   String v1 = exchange.getIn().getHeader("v1", String.class);
                   String v2 = exchange.getIn().getHeader("v2", String.class);
 
