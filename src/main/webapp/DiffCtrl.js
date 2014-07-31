@@ -1,7 +1,7 @@
 angular.module('myApp', [], function ($locationProvider) {
    //enable html5 mode
    $locationProvider.html5Mode(true);
-   console.log("INIT the location Provider")
+   console.log("INIT the location Provider.")
 });
 
 function DiffCtrl($scope, $http, $routeParams, $location) {
