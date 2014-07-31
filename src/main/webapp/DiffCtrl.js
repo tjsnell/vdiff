@@ -35,8 +35,11 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
 
    $scope.init = function () {
 
+      console.log('init()');
+
       var params = $location.hash().split('/');
 
+      console.log('Params: ' + params);
       // set defaults
       $scope.orgName = 'apache';
       $scope.projectName = 'camel';
