@@ -13,7 +13,7 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
          return;
       }
       $("body").css("cursor", "wait");
-      $http.get(location.pathname + "vdiff/compare/" + $scope.orgName + "/" + $scope.projectName + "/" + $scope.v1 + "/" + $scope.v2)
+      $http.get("/vdiff/compare/" + $scope.orgName + "/" + $scope.projectName + "/" + $scope.v1 + "/" + $scope.v2)
          .success(function (data, status, headers, config) {
             $scope.added = sortObject(data.added);
             $scope.dropped = sortObject(data.dropped);
@@ -66,7 +66,8 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
 
 
       $("body").css("cursor", "wait");
-      $http.get(location.pathname + "vdiff/tags/" + $scope.orgName + "/" + $scope.projectName)
+      /* TODO unfortunately adding in the path breaks of you use the filename. */
+      $http.get("/vdiff/tags/" + $scope.orgName + "/" + $scope.projectName)
          .success(function (data, status, headers, config) {
             $scope.optionsList = angular.fromJson(data);
             $scope.optionsList1 = $scope.optionsList;
