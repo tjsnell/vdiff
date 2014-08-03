@@ -79,7 +79,12 @@ public class MyRouteBuilder extends RouteBuilder {
 
                      Message out = exchange.getOut();
 
-                     out.setBody(s);
+                     String pathStr = System.getProperty("user.dir") + "/target/version-diff-1.0-SNAPSHOT/index.html";
+                     Path path = FileSystems.getDefault().getPath(pathStr);
+
+
+                     out.setBody(Files.readAllBytes(path));
+
                      /*
                      InputStream input = getClass().getClassLoader().getResourceAsStream("index.html");
                      BufferedReader reader = new BufferedReader(new InputStreamReader(input));
