@@ -66,7 +66,7 @@ public class MyRouteBuilder extends RouteBuilder {
                      System.out.println("Current relative path is: " + s);
                      System.out.println(System.getProperty("user.dir"));
 
-                     File folder = new File(System.getProperty("user.dir"));
+                     File folder = new File(System.getProperty("user.dir" + "/target"));
                      File[] listOfFiles = folder.listFiles();
 
                      for (int i = 0; i < listOfFiles.length; i++) {
