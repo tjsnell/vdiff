@@ -84,7 +84,8 @@ public class MyRouteBuilder extends RouteBuilder {
 
 
                      out.setBody(Files.readAllBytes(path));
-
+                     out.setHeader(Exchange.CONTENT_TYPE, "text/html");
+                     out.setHeader(Exchange.HTTP_RESPONSE_CODE, "200");
                      /*
                      InputStream input = getClass().getClassLoader().getResourceAsStream("index.html");
                      BufferedReader reader = new BufferedReader(new InputStreamReader(input));
