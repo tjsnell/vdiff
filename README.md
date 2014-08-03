@@ -3,7 +3,10 @@ vdiff
 
 Apache and other Release Package Version Diffs
 
-Forked from https://github.com/tjsnell/vdiff
+Running at: http://vdiff.notsoclever.cc
+
+http://code.notsoclever.cc/camel-release-package-version-differences/
+
 
 You can run within your web container or alternatively run it standalone using jetty-runner
 
@@ -13,7 +16,7 @@ Then, using your browser to open
 
 http://localhost:8181/version-diff/
 
-or 
+or
 
 http://localhost:8181/version-diff/?camel
 

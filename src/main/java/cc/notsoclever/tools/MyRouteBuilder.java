@@ -1,27 +1,38 @@
 package cc.notsoclever.tools;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MyRouteBuilder extends RouteBuilder {
 
    public void configure() {
 
       from("restlet:///tags/{orgName}/{projectName}?restletMethods=get")
+            .to("log:bar")
             .process(new Processor() {
-               @Override
-               public void process(Exchange exchange) throws Exception {
-                  String on = exchange.getIn().getHeader("orgName", String.class);
-                  String cn = exchange.getIn().getHeader("projectName", String.class);
-                  Versions versions = new Versions(on, cn);
-                  ObjectMapper mapper = new ObjectMapper();
-                  String tags = versions.getTags();
-                  String json = mapper.writeValueAsString(VersionsUtils.extractVersions(tags, cn));
-                  exchange.getOut().setBody(json);
-                  exchange.getOut().setHeader(Exchange.CONTENT_TYPE, "application/json");
-               }
+                @Override
+                public void process(Exchange exchange) throws Exception {
+                    String on = exchange.getIn().getHeader("orgName", String.class);
+                    String cn = exchange.getIn().getHeader("projectName", String.class);
+                    Versions versions = new Versions(on, cn);
+                    ObjectMapper mapper = new ObjectMapper();
+                    String tags = versions.getTags();
+                    String json = mapper.writeValueAsString(VersionsUtils.extractVersions(tags, cn));
+                    exchange.getOut().setBody(json);
+                    exchange.getOut().setHeader(Exchange.CONTENT_TYPE, "application/json");
+                }
             });
 
       from("restlet:///compare/{orgName}/{projectName}/{v1}/{v2}?restletMethods=get")
@@ -42,5 +53,34 @@ public class MyRouteBuilder extends RouteBuilder {
                   exchange.getOut().setHeader(Exchange.CONTENT_TYPE, "application/json");
                }
             });
+
+       from("restlet:///foo/{orgName}/{projectName}?restletMethods=get")
+             .to("log:foo")
+             .process(new Processor() {
+                 @Override
+                 public void process(Exchange exchange) throws Exception {
+
+                     Path currentRelativePath = Paths.get("");
+                     String s = currentRelativePath.toAbsolutePath().toString();
+                     System.out.println("Current relative path is: " + s);
+                     System.out.println(System.getProperty("user.dir"));
+
+
+                     Message out = exchange.getOut();
+
+                     out.setBody(s);
+                     /*
+                     InputStream input = getClass().getClassLoader().getResourceAsStream("index.html");
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+
+                     StringBuffer sb = new StringBuffer();
+                     //String s;
+                     while ((s = reader.readLine()) != null) {
+                         sb.append(s);
+                     }
+                     out.setBody(sb.toString());
+                     */
+                 }
+             });
    }
 }
