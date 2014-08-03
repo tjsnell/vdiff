@@ -7,6 +7,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -65,6 +66,16 @@ public class MyRouteBuilder extends RouteBuilder {
                      System.out.println("Current relative path is: " + s);
                      System.out.println(System.getProperty("user.dir"));
 
+                     File folder = new File(System.getProperty("user.dir"));
+                     File[] listOfFiles = folder.listFiles();
+
+                     for (int i = 0; i < listOfFiles.length; i++) {
+                         if (listOfFiles[i].isFile()) {
+                             s = s + "File " + listOfFiles[i].getName();
+                         } else if (listOfFiles[i].isDirectory()) {
+                             s = s + "Directory " + listOfFiles[i].getName();
+                         }
+                     }
 
                      Message out = exchange.getOut();
 
