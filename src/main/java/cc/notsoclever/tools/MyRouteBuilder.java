@@ -15,6 +15,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MyRouteBuilder extends RouteBuilder {
 
@@ -55,49 +57,56 @@ public class MyRouteBuilder extends RouteBuilder {
                }
             });
 
-       from("restlet:///foo/{orgName}/{projectName}?restletMethods=get")
-             .to("log:foo")
+       /*
+       from("restlet:///rest/{orgName}/{projectName}/{v1}/{v2}?restletMethods=get")
+           .process(new Processor() {
+               @Override
+               public void process(Exchange exchange) throws Exception {
+                   Message in = exchange.getIn();
+                   String v1 = in.getHeader("v1", String.class);
+                   String v2 = in.getHeader("v2", String.class);
+                    in.setHeader("Set-Cookie:", load(in) + ", ver1=" + v1 + ", ver2=" + v2);
+   }
+           });
+
+
+
+       from("restlet:///{orgName}/{projectName}?restletMethods=get")
              .process(new Processor() {
                  @Override
                  public void process(Exchange exchange) throws Exception {
 
-                     Path currentRelativePath = Paths.get("");
-                     String s = currentRelativePath.toAbsolutePath().toString();
-                     System.out.println("Current relative path is: " + s);
-                     System.out.println(System.getProperty("user.dir"));
+                     Message in = exchange.getIn();
 
-                     File folder = new File(System.getProperty("user.dir") + "/target/version-diff-1.0-SNAPSHOT");
-                     File[] listOfFiles = folder.listFiles();
+                     in.setHeader("Set-Cookie:", load(in));
 
-                     for (int i = 0; i < listOfFiles.length; i++) {
-                         if (listOfFiles[i].isFile()) {
-                             s = s + "\nFile " + listOfFiles[i].getName();
-                         } else if (listOfFiles[i].isDirectory()) {
-                             s = s + "Directory " + listOfFiles[i].getName();
-                         }
-                     }
-
-                     Message out = exchange.getOut();
-
-                     String pathStr = System.getProperty("user.dir") + "/target/version-diff-1.0-SNAPSHOT/index.html";
-                     Path path = FileSystems.getDefault().getPath(pathStr);
-
-
-                     out.setBody(Files.readAllBytes(path));
-                     out.setHeader(Exchange.CONTENT_TYPE, "text/html");
-                     out.setHeader(Exchange.HTTP_RESPONSE_CODE, "200");
-                     /*
-                     InputStream input = getClass().getClassLoader().getResourceAsStream("index.html");
-                     BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
-                     StringBuffer sb = new StringBuffer();
-                     //String s;
-                     while ((s = reader.readLine()) != null) {
-                         sb.append(s);
-                     }
-                     out.setBody(sb.toString());
-                     */
                  }
              });
+             */
    }
+
+    private String load(Message in) throws IOException {
+        String org = in.getHeader("orgName", String.class);
+        String proj = in.getHeader("projectName", String.class);
+
+        String s = "";
+        File folder = new File(System.getProperty("user.dir") + "/target/version-diff-1.0-SNAPSHOT");
+        File[] listOfFiles = folder.listFiles();
+
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                s = s + "\nFile " + listOfFile.getName();
+            } else if (listOfFile.isDirectory()) {
+                s = s + "Directory " + listOfFile.getName();
+            }
+        }
+
+        String pathStr = System.getProperty("user.dir") + "/target/version-diff-1.0-SNAPSHOT/index.html";
+        Path path = FileSystems.getDefault().getPath(pathStr);
+
+        in.setBody(Files.readAllBytes(path));
+        in.setHeader(Exchange.CONTENT_TYPE, "text/html");
+        in.setHeader(Exchange.HTTP_RESPONSE_CODE, "200");
+        return "org=" + org + ", proj=" + proj;
+    }
 }

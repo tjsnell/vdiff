@@ -1,19 +1,20 @@
-angular.module('myApp', [], function ($locationProvider) {
+angular.module('myApp', ['ngCookies'], function ($locationProvider) {
    //enable html5 mode
    $locationProvider.html5Mode(true);
    console.log("INIT the location Provider.")
 });
 
-function DiffCtrl($scope, $http, $routeParams, $location) {
+function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
 
    $scope.diff = function () {
       console.log("diff()");
-      if (!$scope.v1 || !$scope.v2) {
+      if (!$scope.ver1 || !$scope.ver2) {
          alert("Both versions must be set");
          return;
       }
       $("body").css("cursor", "wait");
-      $http.get("/vdiff/compare/" + $scope.orgName + "/" + $scope.projectName + "/" + $scope.v1 + "/" + $scope.v2)
+      $location.path("diff/" + $scope.orgName+ "/" + $scope.projectName + "/" + $scope.ver1 + "/" + $scope.ver2);
+      $http.get("/vdiff/compare/" + $scope.orgName + "/" + $scope.projectName + "/" + $scope.ver1 + "/" + $scope.ver2)
          .success(function (data, status, headers, config) {
             $scope.added = sortObject(data.added);
             $scope.dropped = sortObject(data.dropped);
@@ -35,32 +36,29 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
 
    $scope.init = function () {
 
-      console.log('init()');
+      $scope.showAdded = false;
 
-      var params = $location.hash().split('/');
+      if (typeof $cookies.org === 'undefined' ) {
+         // set defaults
+         $scope.orgName = 'apache';
+         $scope.projectName = 'camel';
+      } else {
+         $scope.orgName = $cookies.org;
+         $scope.projectName = $cookies.proj;
+      }
+      $location.path("diff/" + $scope.orgName + "/" + $scope.projectName);
 
-      console.log('Params: ' + params);
-      // set defaults
-      $scope.orgName = 'apache';
-      $scope.projectName = 'camel';
-
-      switch (params.length) {
-         case 4:
-            $scope.orgName = params[0];
-            $scope.projectName = params[1];
-            $scope.v1 = params[2];
-            $scope.v2 = params[3];
-            break;
-         case 2:
-            $scope.orgName = params[0];
-            $scope.projectName = params[1];
-            break;
+      if (typeof $cookies.ver1 !== 'undefined') {
+         $scope.ver1 = $cookies.ver1;
+         $scope.ver2 = $cookies.ver2;
+      } else {
+         console.log('no cookie for me');
       }
 
       console.log('Org: ' + $scope.orgName + ' Project: ' + $scope.projectName);
+      console.log('ver1: ' + $scope.ver1 + ' ver2: ' + $scope.ver2);
 
-
-      if ($scope.v1 != null && $scope.v2 != null) {
+      if ($scope.ver1 != null && $scope.ver2 != null) {
          $scope.diff();
       }
 
@@ -81,10 +79,10 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
    };
 
    $scope.changed1 = function () {
-      if ($scope.v1) {
+      if ($scope.ver1) {
          var rp = true;
          $scope.optionsList2 = $scope.optionsList.filter(function (item) {
-            if (rp && $scope.v1 == item) {
+            if (rp && $scope.ver1 == item) {
                rp = false;
                return false;
             }
@@ -93,13 +91,31 @@ function DiffCtrl($scope, $http, $routeParams, $location) {
       } else {
          $scope.optionsList2 = $scope.optionsList;
       }
+   };
+
+   $scope.toggleAdded = function() {
+      $scope.showAdded = !$scope.showAdded;
    }
 
+   $scope.toggleDropped = function() {
+      $scope.showDropped = !$scope.showDropped;
+   }
+
+   $scope.toggleChanged = function() {
+      $scope.showChanged = !$scope.showChanged;
+   }
+
+   $scope.toggleUnchanged = function() {
+      $scope.showUnchanged = !$scope.showUnchanged;
+   }
+
+
+
    $scope.changed2 = function () {
-      if ($scope.v2) {
+      if ($scope.ver2) {
          var rp = false;
          $scope.optionsList1 = $scope.optionsList.filter(function (item) {
-            if (!rp && $scope.v2 == item) {
+            if (!rp && $scope.ver2 == item) {
                rp = true;
                return false;
             }
