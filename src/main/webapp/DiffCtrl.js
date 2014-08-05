@@ -70,7 +70,9 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
             $scope.optionsList = angular.fromJson(data);
             $scope.optionsList1 = $scope.optionsList;
             $scope.optionsList2 = $scope.optionsList;
+            $scope.optionsList2.unshift('trunk'); // only new version needs trunk
             $("body").css("cursor", "default");
+            console.log($scope.optionsList);
          })
          .error(function (data, status, headers, config) {
             console.log("Status-init: " + status);
