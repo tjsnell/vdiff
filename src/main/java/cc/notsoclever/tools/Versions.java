@@ -184,7 +184,7 @@ public class Versions {
         URL url = null;
         InputStream in = null;
         try {
-            if (version.equals("trunk")) {
+            if (version.equals("master")) {
                 url = new URL(MessageFormat.format(POM_TRUNK_URL, new Object[]{org, name, version}));
             } else {
                 url = new URL(MessageFormat.format(POM_URL, new Object[]{org, name, version}));
@@ -193,7 +193,7 @@ public class Versions {
         } catch (IOException e) {
             LOG.error("Unable to read from " + url);
             try {
-                if (version.equals("trunk")) {
+                if (version.equals("master")) {
                     url = new URL(MessageFormat.format(POM2_TRUNK_URL, new Object[]{org, name, version}));
                 } else {
                     url = new URL(MessageFormat.format(POM2_URL, new Object[]{org, name, version}));

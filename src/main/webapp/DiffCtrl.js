@@ -69,10 +69,9 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
          .success(function (data, status, headers, config) {
             $scope.optionsList = angular.fromJson(data);
             $scope.optionsList1 = $scope.optionsList;
-            $scope.optionsList2 = $scope.optionsList;
-            $scope.optionsList2.unshift('trunk'); // only new version needs trunk
+            $scope.optionsList2 = $scope.optionsList.slice(0);
+            $scope.optionsList2.unshift('master'); // only new version needs master
             $("body").css("cursor", "default");
-            console.log($scope.optionsList);
          })
          .error(function (data, status, headers, config) {
             console.log("Status-init: " + status);
@@ -91,7 +90,27 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
             return rp;
          });
       } else {
-         $scope.optionsList2 = $scope.optionsList;
+         $scope.optionsList2 = $scope.optionsList.slice(0);
+      }
+      $scope.optionsList2.unshift('master'); // only new version needs master
+   };
+
+
+
+   $scope.changed2 = function () {
+      if ($scope.ver2 === 'master') {
+         $scope.optionsList1 = $scope.optionsList;
+      } else if ($scope.ver2) {
+         var rp = false;
+         $scope.optionsList1 = $scope.optionsList.filter(function (item) {
+            if (!rp && $scope.ver2 == item) {
+               rp = true;
+               return false;
+            }
+            return rp;
+         });
+      } else {
+         $scope.optionsList1 = $scope.optionsList;
       }
    };
 
@@ -111,22 +130,6 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
       $scope.showUnchanged = !$scope.showUnchanged;
    }
 
-
-
-   $scope.changed2 = function () {
-      if ($scope.ver2) {
-         var rp = false;
-         $scope.optionsList1 = $scope.optionsList.filter(function (item) {
-            if (!rp && $scope.ver2 == item) {
-               rp = true;
-               return false;
-            }
-            return rp;
-         });
-      } else {
-         $scope.optionsList1 = $scope.optionsList;
-      }
-   };
 
 }
 
