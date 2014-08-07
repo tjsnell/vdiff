@@ -99,7 +99,7 @@
 
    <div class="panel-group" id="accordion">
       <div class="panel panel-default" id="panel1">
-         <div class="panel-heading">
+         <div class="panel-heading" ng-click="toggleAdded()">
             <h4 class="panel-title">
                <a ng-click="toggleAdded()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showAdded"></span>
@@ -124,7 +124,7 @@
       </div>
 
       <div class="panel panel-default" id="panel2">
-         <div class="panel-heading">
+         <div class="panel-heading" ng-click="toggleDropped()">
             <h4 class="panel-title">
                <a ng-click="toggleDropped()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showDropped"></span>
@@ -150,7 +150,7 @@
       </div>
 
       <div class="panel panel-default" id="panel3">
-         <div class="panel-heading">
+         <div class="panel-heading" ng-click="toggleChanged()">
             <h4 class="panel-title">
                <a ng-click="toggleChanged()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showChanged"></span>
@@ -177,7 +177,7 @@
       </div>
 
       <div class="panel panel-default" id="panel4">
-         <div class="panel-heading">
+         <div class="panel-heading" ng-click="toggleUnchanged()">
             <h4 class="panel-title">
                <a ng-click="toggleUnchanged()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showUnchanged"></span>
