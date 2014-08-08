@@ -101,11 +101,9 @@
       <div class="panel panel-default" id="panel1">
          <div class="panel-heading" ng-click="toggleAdded()">
             <h4 class="panel-title">
-               <a ng-click="toggleAdded()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showAdded"></span>
                   <span class="glyphicon glyphicon-chevron-down" ng-show="showAdded"></span>
                   Added Packages ({{ addedCount }})
-               </a>
             </h4>
          </div>
          <div ng-show="showAdded" class="animate-show">
@@ -126,11 +124,9 @@
       <div class="panel panel-default" id="panel2">
          <div class="panel-heading" ng-click="toggleDropped()">
             <h4 class="panel-title">
-               <a ng-click="toggleDropped()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showDropped"></span>
                   <span class="glyphicon glyphicon-chevron-down" ng-show="showDropped"></span>
                   Dropped Packages ({{ droppedCount }})
-               </a>
             </h4>
          </div>
          <div ng-show="showDropped" class="animate-show">
@@ -152,11 +148,9 @@
       <div class="panel panel-default" id="panel3">
          <div class="panel-heading" ng-click="toggleChanged()">
             <h4 class="panel-title">
-               <a ng-click="toggleChanged()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showChanged"></span>
                   <span class="glyphicon glyphicon-chevron-down" ng-show="showChanged"></span>
                   Changed Packages ({{ changed.length }})
-               </a>
             </h4>
          </div>
          <div ng-show="showChanged" class="animate-show">
@@ -179,11 +173,9 @@
       <div class="panel panel-default" id="panel4">
          <div class="panel-heading" ng-click="toggleUnchanged()">
             <h4 class="panel-title">
-               <a ng-click="toggleUnchanged()">
                   <span class="glyphicon glyphicon-chevron-right" ng-show="!showUnchanged"></span>
                   <span class="glyphicon glyphicon-chevron-down" ng-show="showUnchanged"></span>
                   Unchanged Packages ({{ unchangedCount }})
-               </a>
             </h4>
          </div>
          <div ng-show="showUnchanged" class="animate-show">
