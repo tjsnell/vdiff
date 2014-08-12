@@ -97,8 +97,8 @@ public class VersionsTest extends Assert {
     
     Map<String, String> unchanged = versions.getUnChanged();
     assertNotNull(unchanged);
-    assertEquals(249, unchanged.size());
-    assertEquals(249, versions.getTotal() - 4 - 27);
+    assertEquals(251, unchanged.size());
+    assertEquals(251, versions.getTotal() - 4 - 27);
   }
 
   @Test
@@ -129,8 +129,8 @@ public class VersionsTest extends Assert {
     
     Map<String, String> unchanged = versions.getUnChanged();
     assertNotNull(unchanged);
-    assertEquals(76, unchanged.size());
-    assertEquals(76, versions.getTotal() - 1 - 8);
+    assertEquals(79, unchanged.size());
+    assertEquals(79, versions.getTotal() - 1 - 8);
   }
   
   @Test
@@ -161,8 +161,8 @@ public class VersionsTest extends Assert {
     
     Map<String, String> unchanged = versions.getUnChanged();
     assertNotNull(unchanged);
-    assertEquals(32, unchanged.size());
-    assertEquals(32, versions.getTotal() - 3);
+    assertEquals(33, unchanged.size());
+    assertEquals(33, versions.getTotal() - 3);
   }
   
   @Test

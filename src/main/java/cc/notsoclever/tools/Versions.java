@@ -44,7 +44,7 @@ public class Versions {
     public static final String POM2_TRUNK_URL = "https://raw.github.com/{0}/{1}/{2}/pom.xml";
     public static final String TAGS_URL = "https://api.github.com/repos/{0}/{1}/tags";
 
-    private static final Pattern VERSION_PROP_REGEX = Pattern.compile("^(.*).version$");
+    private static final Pattern VERSION_PROP_REGEX = Pattern.compile("^(.*).version(.range)?$");
     private static final Pattern VERSION_VALUE_REGEX = Pattern.compile("^[\\(\\[]?\\d[0-9A-Za-z\\-\\.\\,\\s]*[\\)\\]]?$");
     private static final String DEFAULT_ORG = "apache";
     private static final String DEFAULT_NAME = "camel";
@@ -224,7 +224,12 @@ public class Versions {
                 String nodeValue = node.getChildNodes().item(0).getNodeValue();
                 Matcher mv = VERSION_VALUE_REGEX.matcher(nodeValue);
                 if (mv.find()) {
-                    versions.put(mp.group(1), nodeValue);
+                    if (mp.group(2) != null) {
+                        // including the version range suffix
+                        versions.put(mp.group(1) + mp.group(2), nodeValue);
+                    } else {
+                        versions.put(mp.group(1), nodeValue);
+                    }
                 }
             }
         }
