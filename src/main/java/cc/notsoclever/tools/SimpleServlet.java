@@ -21,17 +21,9 @@ public class SimpleServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
           throws ServletException, IOException {
-        System.out.println("--=-=-=-=-=- GET");
-        // Set response content type
+
         response.setContentType("text/html");
-
         setCookies(request, response);
-
-        System.out.println("--------------->request.toString() = " + request.toString());
-
-//        response.sendRedirect("/");
-
-        // Actual logic goes here.
         PrintWriter out = response.getWriter();
         out.println(load());
     }
@@ -40,12 +32,13 @@ public class SimpleServlet extends HttpServlet {
         String[] params = request.getPathInfo().split("/");
         // the first element is empty since the string starts with an /
         System.out.println("params = " + Arrays.toString(params));
-        if (params.length == 5) {
-            response.addCookie(new Cookie("ver1", params[3]));
-            response.addCookie(new Cookie("ver2", params[4]));
+        if (params.length == 6) {
+            response.addCookie(new Cookie("activeTab", params[3]));
+            response.addCookie(new Cookie("oldTag", params[4]));
+            response.addCookie(new Cookie("newTag", params[5]));
         }
 
-        if (params.length >= 3) {
+        if (params.length >= 4) {
             response.addCookie(new Cookie("org", params[1]));
             response.addCookie(new Cookie("proj", params[2]));
         }

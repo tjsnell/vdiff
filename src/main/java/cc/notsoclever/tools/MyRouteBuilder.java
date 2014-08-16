@@ -23,7 +23,6 @@ public class MyRouteBuilder extends RouteBuilder {
    public void configure() {
 
       from("restlet:///tags/{orgName}/{projectName}?restletMethods=get")
-            .to("log:bar")
             .process(new Processor() {
                 @Override
                 public void process(Exchange exchange) throws Exception {
@@ -37,6 +36,22 @@ public class MyRouteBuilder extends RouteBuilder {
                     exchange.getOut().setHeader(Exchange.CONTENT_TYPE, "application/json");
                 }
             });
+
+       from("restlet:///branches/{orgName}/{projectName}?restletMethods=get")
+             .process(new Processor() {
+                 @Override
+                 public void process(Exchange exchange) throws Exception {
+                     String on = exchange.getIn().getHeader("orgName", String.class);
+                     String cn = exchange.getIn().getHeader("projectName", String.class);
+                     Versions versions = new Versions(on, cn);
+                     ObjectMapper mapper = new ObjectMapper();
+                     String tags = versions.getBranches();
+                     String json = mapper.writeValueAsString(VersionsUtils.extractVersions(tags, cn));
+                     exchange.getOut().setBody(json);
+                     exchange.getOut().setHeader(Exchange.CONTENT_TYPE, "application/json");
+                 }
+             });
+
 
       from("restlet:///compare/{orgName}/{projectName}/{v1}/{v2}?restletMethods=get")
             .process(new Processor() {
@@ -56,33 +71,6 @@ public class MyRouteBuilder extends RouteBuilder {
                   exchange.getOut().setHeader(Exchange.CONTENT_TYPE, "application/json");
                }
             });
-
-       /*
-       from("restlet:///rest/{orgName}/{projectName}/{v1}/{v2}?restletMethods=get")
-           .process(new Processor() {
-               @Override
-               public void process(Exchange exchange) throws Exception {
-                   Message in = exchange.getIn();
-                   String v1 = in.getHeader("v1", String.class);
-                   String v2 = in.getHeader("v2", String.class);
-                    in.setHeader("Set-Cookie:", load(in) + ", ver1=" + v1 + ", ver2=" + v2);
-   }
-           });
-
-
-
-       from("restlet:///{orgName}/{projectName}?restletMethods=get")
-             .process(new Processor() {
-                 @Override
-                 public void process(Exchange exchange) throws Exception {
-
-                     Message in = exchange.getIn();
-
-                     in.setHeader("Set-Cookie:", load(in));
-
-                 }
-             });
-             */
    }
 
     private String load(Message in) throws IOException {

@@ -38,11 +38,10 @@ import java.util.regex.Pattern;
 public class Versions {
     static Logger LOG = Logger.getLogger(Versions.class.getName());
 
-    public static final String POM_URL = "https://raw.github.com/{0}/{1}/{1}-{2}/parent/pom.xml";
-    public static final String POM2_URL = "https://raw.github.com/{0}/{1}/{1}-{2}/pom.xml";
-    public static final String POM_TRUNK_URL = "https://raw.github.com/{0}/{1}/{2}/parent/pom.xml";
-    public static final String POM2_TRUNK_URL = "https://raw.github.com/{0}/{1}/{2}/pom.xml";
+    public static final String POM_URL = "https://raw.github.com/{0}/{1}/{2}/parent/pom.xml";
+    public static final String POM2_URL = "https://raw.github.com/{0}/{1}/{2}/pom.xml";
     public static final String TAGS_URL = "https://api.github.com/repos/{0}/{1}/tags";
+    public static final String BRANCHES_URL = "https://api.github.com/repos/{0}/{1}/branches";
 
     private static final Pattern VERSION_PROP_REGEX = Pattern.compile("^(.*).version$");
     private static final Pattern VERSION_VALUE_REGEX = Pattern.compile("^[\\(\\[]?\\d[0-9A-Za-z\\-\\.\\,\\s]*[\\)\\]]?$");
@@ -86,8 +85,8 @@ public class Versions {
         unChanged = new HashMap<String, String>();
         changed = new ArrayList<List<String>>();
 
-        this.v1Tag = versions1Tag.startsWith(name) ? versions1Tag.substring(name.length() + 1) : versions1Tag;
-        this.v2Tag = versions2Tag.startsWith(name) ? versions2Tag.substring(name.length() + 1) : versions2Tag;
+        this.v1Tag = versions1Tag;
+        this.v2Tag = versions2Tag;
 
         versions1 = loadVersions(v1Tag);
         versions2 = loadVersions(v2Tag);
@@ -103,10 +102,24 @@ public class Versions {
         });
     }
 
+    public String getBranches() throws Exception {
+        LOG.info("Get Branches");
+
+        URL url = new URL(MessageFormat.format(BRANCHES_URL, new Object[]{org, name}));
+
+        return loadVersions(url);
+    }
+
     public String getTags() throws Exception {
         LOG.info("Get TAGS");
 
         URL url = new URL(MessageFormat.format(TAGS_URL, new Object[]{org, name}));
+
+        return loadVersions(url);
+    }
+
+    private String loadVersions(URL url) throws IOException {
+        System.out.println("url = " + url);
         HttpURLConnection c = (HttpURLConnection) url.openConnection();
         c.setRequestMethod("GET");
         c.setRequestProperty("Content-length", "0");
@@ -184,26 +197,20 @@ public class Versions {
         URL url = null;
         InputStream in = null;
         try {
-            if (version.equals("master")) {
-                url = new URL(MessageFormat.format(POM_TRUNK_URL, new Object[]{org, name, version}));
-            } else {
-                url = new URL(MessageFormat.format(POM_URL, new Object[]{org, name, version}));
-            }
+            url = new URL(MessageFormat.format(POM_URL, new Object[]{org, name, version}));
             in = url.openConnection().getInputStream();
         } catch (IOException e) {
             LOG.error("Unable to read from " + url);
             try {
-                if (version.equals("master")) {
-                    url = new URL(MessageFormat.format(POM2_TRUNK_URL, new Object[]{org, name, version}));
-                } else {
-                    url = new URL(MessageFormat.format(POM2_URL, new Object[]{org, name, version}));
-                }
+                url = new URL(MessageFormat.format(POM2_URL, new Object[]{org, name, version}));
                 in = url.openConnection().getInputStream();
             } catch (IOException e2) {
                 LOG.error("Unable to read from " + url);
                 throw e2;
             }
         }
+
+        System.out.println("url = " + url);
 
         Document doc = builder.parse(in);
 
@@ -215,8 +222,8 @@ public class Versions {
         NodeList nodes = (NodeList) result;
 
         Map<String, String> versions = new HashMap<String, String>();
-
         for (int i = 0; i < nodes.getLength(); i++) {
+
             Node node = nodes.item(i);
             String nodeName = node.getNodeName();
             Matcher mp = VERSION_PROP_REGEX.matcher(nodeName);

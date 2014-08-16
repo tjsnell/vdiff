@@ -8,13 +8,30 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
 
    $scope.diff = function () {
       console.log("diff()");
-      if (!$scope.ver1 || !$scope.ver2) {
-         alert("Both versions must be set");
-         return;
-      }
+//      if (!$scope.oldTag || !$scope.newTag) {
+//         alert("Both versions must be set");
+//         return;
+//      }
+
       $("body").css("cursor", "wait");
-      $location.path("diff/" + $scope.orgName+ "/" + $scope.projectName + "/" + $scope.ver1 + "/" + $scope.ver2);
-      $http.get("/vdiff/compare/" + $scope.orgName + "/" + $scope.projectName + "/" + $scope.ver1 + "/" + $scope.ver2)
+
+      var older, newer;
+
+      if ($scope.active_tab == 'tags') {
+         older = $scope.oldTag;
+         newer = $scope.newTag;
+         $location.path("diff/" + $scope.orgName + "/" + $scope.projectName + "/tags/" + older + "/" + newer);
+         older = $scope.tagOptions[older];
+         newer = $scope.tagOptions[newer];
+      } else {
+         older = $scope.oldBranch;
+         newer = $scope.newBranch;
+         $location.path("diff/" + $scope.orgName + "/" + $scope.projectName + "/branches/" + older + "/" + newer);
+         older = $scope.branchOptions[older];
+         newer = $scope.branchOptions[newer];
+      }
+
+      $http.get("/vdiff/compare/" + $scope.orgName + "/" + $scope.projectName + "/" + older + "/" + newer)
          .success(function (data, status, headers, config) {
             $scope.added = sortObject(data.added);
             $scope.dropped = sortObject(data.dropped);
@@ -34,11 +51,109 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
 
    };
 
+   $scope.shorten = function (str) {
+      var reg = new RegExp($scope.projectName + "-(.*)");
+      var shorter = str.match(reg);
+      if (shorter) {
+         return shorter[1];
+      } else {
+         return str;
+      }
+   };
+
+   function setTagsFromCookies() {
+      if ($scope.active_tab === 'tags') {
+         if (typeof $cookies.oldTag !== 'undefined') {
+            $scope.oldTag = $cookies.oldTag;
+            $scope.newTag = $cookies.newTag;
+            $scope.oldBranch = null;
+            $scope.newBranch = null;
+            $scope.diff();
+         }
+      }
+   }
+
+   function setBranchesFromCookies() {
+      if ($scope.active_tab === 'branches') {
+         if (typeof $cookies.oldTag !== 'undefined') {
+            // todo make old new generic cookie names
+            $scope.oldBranch = $cookies.oldTag;
+            $scope.newBranch = $cookies.newTag;
+            $scope.oldTag = null;
+            $scope.newTag = null;
+            $scope.diff();
+         }
+      }
+   }
+
+   function loadTags() {
+      /* TODO unfortunately adding in the path breaks if index.html is in filename. */
+      $http.get("/vdiff/tags/" + $scope.orgName + "/" + $scope.projectName)
+         .success(function (data, status, headers, config) {
+            $scope.tagsList = angular.fromJson(data);
+
+            $scope.tagOptions = {};
+            $scope.tagOptions['master'] = 'master';
+
+            for (var i = 0; i < $scope.tagsList.length; i++) {
+               shortName = $scope.shorten($scope.tagsList[i]);
+               $scope.tagOptions[shortName] = $scope.tagsList[i];
+               $scope.tagsList[i] = shortName;
+            }
+
+            $scope.oldTagsList = $scope.tagsList;
+            $scope.newTagsList = $scope.tagsList.slice(0);
+            $("body").css("cursor", "default");
+            setTagsFromCookies();
+         })
+         .error(function (data, status, headers, config) {
+            console.log("Status-init: " + status);
+            $("body").css("cursor", "default");
+         });
+   }
+
+   function loadBranches() {
+      console.log('loading branches');
+      $http.get("/vdiff/branches/" + $scope.orgName + "/" + $scope.projectName)
+         .success(function (data, status, headers, config) {
+            $scope.branchesList = angular.fromJson(data);
+
+            $scope.branchOptions = {};
+
+            for (var i = 0; i < $scope.branchesList.length; i++) {
+//            for (var i = $scope.branchesList.length - 1; i >= 0; i--) {
+               shortName = $scope.shorten($scope.branchesList[i]);
+               $scope.branchOptions[shortName] = $scope.branchesList[i];
+               $scope.branchesList[i] = shortName;
+            }
+
+            $scope.oldBranchesList = $scope.branchesList;
+            $scope.newBranchesList = $scope.branchesList.slice(0);
+            $("body").css("cursor", "default");
+            setBranchesFromCookies();
+            console.log('brancheds loaded');
+         })
+         .error(function (data, status, headers, config) {
+            console.log("Status-init: " + status);
+            $("body").css("cursor", "default");
+         });
+   }
+
    $scope.init = function () {
 
-      $scope.showAdded = false;
+      $("body").css("cursor", "wait");
 
-      if (typeof $cookies.org === 'undefined' ) {
+      if (typeof $cookies.activeTab !== 'undefined') {
+         $scope.active_tab = $cookies.activeTab;
+      } else {
+         $scope.active_tab = 'tags';
+      }
+
+      if (typeof $cookies.activeTab !== 'undefined') {
+         $scope.active_tab = $cookies.activeTab;
+      }
+
+      if (typeof $cookies.org === 'undefined') {
          // set defaults
          $scope.orgName = 'apache';
          $scope.projectName = 'camel';
@@ -46,90 +161,97 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
          $scope.orgName = $cookies.org;
          $scope.projectName = $cookies.proj;
       }
+
       $location.path("diff/" + $scope.orgName + "/" + $scope.projectName);
 
-      if (typeof $cookies.ver1 !== 'undefined') {
-         $scope.ver1 = $cookies.ver1;
-         $scope.ver2 = $cookies.ver2;
-      } else {
-         console.log('no cookie for me');
-      }
-
-      console.log('Org: ' + $scope.orgName + ' Project: ' + $scope.projectName);
-      console.log('ver1: ' + $scope.ver1 + ' ver2: ' + $scope.ver2);
-
-      if ($scope.ver1 != null && $scope.ver2 != null) {
-         $scope.diff();
-      }
-
-
-      $("body").css("cursor", "wait");
-      /* TODO unfortunately adding in the path breaks of you use the filename. */
-      $http.get("/vdiff/tags/" + $scope.orgName + "/" + $scope.projectName)
-         .success(function (data, status, headers, config) {
-            $scope.optionsList = angular.fromJson(data);
-            $scope.optionsList1 = $scope.optionsList;
-            $scope.optionsList2 = $scope.optionsList.slice(0);
-            $scope.optionsList2.unshift('master'); // only new version needs master
-            $("body").css("cursor", "default");
-         })
-         .error(function (data, status, headers, config) {
-            console.log("Status-init: " + status);
-            $("body").css("cursor", "default");
-         });
+      loadTags();
+      loadBranches();
    };
 
-   $scope.changed1 = function () {
-      if ($scope.ver1) {
+
+
+   $scope.oldTagUpdate = function () {
+      if ($scope.oldTag) {
          var rp = true;
-         $scope.optionsList2 = $scope.optionsList.filter(function (item) {
-            if (rp && $scope.ver1 == item) {
+         $scope.newTagsList = $scope.tagsList.filter(function (item) {
+            if (rp && $scope.oldTag == item) {
                rp = false;
                return false;
             }
             return rp;
          });
       } else {
-         $scope.optionsList2 = $scope.optionsList.slice(0);
+         $scope.newTagsList = $scope.tagsList.slice(0);
       }
-      $scope.optionsList2.unshift('master'); // only new version needs master
    };
 
 
-
-   $scope.changed2 = function () {
-      if ($scope.ver2 === 'master') {
-         $scope.optionsList1 = $scope.optionsList;
-      } else if ($scope.ver2) {
+   $scope.newTagUpdate = function () {
+      if ($scope.newTag === 'master') {
+         $scope.oldTagsList = $scope.tagsList;
+      } else if ($scope.newTag) {
          var rp = false;
-         $scope.optionsList1 = $scope.optionsList.filter(function (item) {
-            if (!rp && $scope.ver2 == item) {
+         $scope.oldTagsList = $scope.tagsList.filter(function (item) {
+            if (!rp && $scope.newTag == item) {
                rp = true;
                return false;
             }
             return rp;
          });
       } else {
-         $scope.optionsList1 = $scope.optionsList;
+         $scope.oldTagsList = $scope.tagsList;
       }
    };
 
-   $scope.toggleAdded = function() {
+   $scope.oldBranchUpdate = function () {
+      if ($scope.oldBranch && 1 == 2) {
+         var rp = true;
+         $scope.newBranchesList = $scope.branchesList.filter(function (item) {
+            if (rp && $scope.oldBranch == item) {
+               rp = false;
+               return false;
+            }
+            return rp;
+         });
+      } else {
+         $scope.newBranchesList = $scope.branchesList.slice(0);
+      }
+      $scope.newBranchesList.unshift('master'); // only new version needs master
+   };
+
+
+   $scope.newBranchUpdate = function () {
+      if ($scope.newBranch && 1 == 2) {
+         var rp = false;
+         $scope.oldBranchesList = $scope.branchesList.filter(function (item) {
+            if (!rp && $scope.newBranch == item) {
+               rp = true;
+               return false;
+            }
+            return rp;
+         });
+      } else {
+         $scope.oldBranchesList = $scope.branchesList;
+      }
+   };
+
+   $scope.toggleAdded = function () {
       $scope.showAdded = !$scope.showAdded;
-   }
+   };
 
-   $scope.toggleDropped = function() {
+   $scope.toggleDropped = function () {
       $scope.showDropped = !$scope.showDropped;
-   }
+   };
 
-   $scope.toggleChanged = function() {
+   $scope.toggleChanged = function () {
       $scope.showChanged = !$scope.showChanged;
-   }
+   };
 
-   $scope.toggleUnchanged = function() {
+   $scope.toggleUnchanged = function () {
       $scope.showUnchanged = !$scope.showUnchanged;
-   }
+   };
 
+   $scope.init();
 
 }
 
@@ -151,3 +273,12 @@ function sortObject(o) {
    }
    return sorted;
 }
+
+
+Array.prototype.get = function (name) {
+   for (var i = 0, len = this.length; i < len; i++) {
+      if (typeof this[i] != "object") continue;
+      if (this[i].name === name) return this[i].value;
+   }
+   return null;
+};
