@@ -38,7 +38,7 @@ public class SimpleServlet extends HttpServlet {
             response.addCookie(new Cookie("newTag", params[5]));
         }
 
-        if (params.length >= 4) {
+        if (params.length >= 3) {
             response.addCookie(new Cookie("org", params[1]));
             response.addCookie(new Cookie("proj", params[2]));
         }
