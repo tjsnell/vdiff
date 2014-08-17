@@ -17,10 +17,8 @@ public class VersionsUtils {
             ObjectMapper mapper = new ObjectMapper();
             List<Branch> allTags = mapper.readValue(source, mapper.getTypeFactory().constructCollectionType(
                   List.class, Branch.class));
-            final String cname = name + "-";
-            final String cname2 = name + ".";
             for (Branch b : allTags) {
-                versionTags.add(b.name);//.substring(name.length() + 1));
+                versionTags.add(b.name);
             }
         } catch (IOException e) {
             LOG.error("Error converting JSON collection to List<MyType>.", e);

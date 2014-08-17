@@ -13,7 +13,7 @@ import org.junit.Test;
 public class VersionsTest extends Assert {
   static Logger LOG = Logger.getLogger(VersionsTest.class.getName());
   private static boolean testable;
-  
+
   @BeforeClass
   public static void checkConnection() {
     InputStream in = null;
@@ -33,7 +33,7 @@ public class VersionsTest extends Assert {
       }
     }
   }
-  
+
   @Test
   public void testCamelTags() throws Exception {
     if (!testable) {
@@ -44,14 +44,14 @@ public class VersionsTest extends Assert {
 
         List<String> versionTags = VersionsUtils.extractVersions(versions.getTags(), "camel");
         for (String v : versionTags) {
-          LOG.info("finding tag: " + v);  
+          LOG.info("finding tag: " + v);
         }
         // check some random valid version
-        assertTrue(versionTags.contains("2.12.1"));
-        assertTrue(versionTags.contains("2.12.2"));
-        
+        assertTrue(versionTags.contains("camel-2.12.1"));
+        assertTrue(versionTags.contains("camel-2.12.2"));
+
   }
-  
+
   @Test
   public void testCXFTags() throws Exception {
     if (!testable) {
@@ -62,13 +62,13 @@ public class VersionsTest extends Assert {
 
         List<String> versionTags = VersionsUtils.extractVersions(versions.getTags(), "cxf");
         for (String v : versionTags) {
-          LOG.info("finding tag: " + v);  
+          LOG.info("finding tag: " + v);
         }
         assertNotNull(versionTags);
         // check some random valid version
-        assertTrue(versionTags.contains("2.7.8"));
+        assertTrue(versionTags.contains("cxf-2.7.8"));
   }
-  
+
   @Test
   public void compareCamel() throws Exception {
     if (!testable) {
@@ -76,10 +76,10 @@ public class VersionsTest extends Assert {
       return;
     }
     Versions versions = new Versions("camel");
-    
-    versions.compare("2.12.1", "2.12.2");
+
+    versions.compare("camel-2.12.1", "camel-2.12.2");
     logComparisonResult(versions);
-    
+
     Map<String, String> added = versions.getAdded();
     assertNotNull(added);
     assertEquals(4, added.size());
@@ -94,7 +94,7 @@ public class VersionsTest extends Assert {
     assertNotNull(changed);
     assertEquals(27, changed.size());
     assertEquals(27, versions.getTotalChanged());
-    
+
     Map<String, String> unchanged = versions.getUnChanged();
     assertNotNull(unchanged);
     assertEquals(251, unchanged.size());
@@ -108,8 +108,8 @@ public class VersionsTest extends Assert {
       return;
     }
     Versions versions = new Versions("cxf");
-    
-    versions.compare("2.7.7", "2.7.8");
+
+    versions.compare("cxf-2.7.7", "cxf-2.7.8");
     logComparisonResult(versions);
 
     Map<String, String> added = versions.getAdded();
@@ -126,13 +126,13 @@ public class VersionsTest extends Assert {
     assertNotNull(changed);
     assertEquals(8, changed.size());
     assertEquals(8, versions.getTotalChanged());
-    
+
     Map<String, String> unchanged = versions.getUnChanged();
     assertNotNull(unchanged);
     assertEquals(79, unchanged.size());
     assertEquals(79, versions.getTotal() - 1 - 8);
   }
-  
+
   @Test
   public void compareAtmosphere() throws Exception {
     if (!testable) {
@@ -140,8 +140,8 @@ public class VersionsTest extends Assert {
       return;
     }
     Versions versions = new Versions("Atmosphere", "atmosphere");
-    
-    versions.compare("project-2.1.7", "project-2.2.0");
+
+    versions.compare("atmosphere-project-2.1.7", "atmosphere-project-2.2.0");
     logComparisonResult(versions);
 
     Map<String, String> added = versions.getAdded();
@@ -158,13 +158,13 @@ public class VersionsTest extends Assert {
     assertNotNull(changed);
     assertEquals(3, changed.size());
     assertEquals(3, versions.getTotalChanged());
-    
+
     Map<String, String> unchanged = versions.getUnChanged();
     assertNotNull(unchanged);
     assertEquals(33, unchanged.size());
     assertEquals(33, versions.getTotal() - 3);
   }
-  
+
   @Test
   public void testAtmosphereTags() throws Exception {
     if (!testable) {
@@ -175,13 +175,13 @@ public class VersionsTest extends Assert {
 
         List<String> versionTags = VersionsUtils.extractVersions(versions.getTags(), "atmosphere");
         for (String v : versionTags) {
-          LOG.info("finding tag: " + v);  
+          LOG.info("finding tag: " + v);
         }
         // check some random valid version
-        assertTrue(versionTags.contains("project-2.1.7"));
-        assertTrue(versionTags.contains("project-2.2.0"));
+        assertTrue(versionTags.contains("atmosphere-project-2.1.7"));
+        assertTrue(versionTags.contains("atmosphere-project-2.2.0"));
   }
-  
+
   private static void logComparisonResult(Versions versions) {
     LOG.info("### total added: " + versions.getTotalAdded());
     for (Map.Entry<String, String> c : versions.getAdded().entrySet()) {
@@ -195,12 +195,12 @@ public class VersionsTest extends Assert {
     for (List<String> c : versions.getChanged()) {
       LOG.info(buildChangedString("changed", c));
     }
-    LOG.info("### total unchanged: " 
+    LOG.info("### total unchanged: "
         + (versions.getTotal() - versions.getTotalChanged() - versions.getTotalAdded() - versions.getTotalDropped()));
     for (Map.Entry<String, String> c : versions.getUnChanged().entrySet()) {
       LOG.info(buildPairString("unchanged", c));
     }
-    
+
   }
   private static String buildChangedString(String title, List<String> ss) {
     StringBuilder sb = new StringBuilder();
@@ -208,13 +208,13 @@ public class VersionsTest extends Assert {
         .append(ss.get(0)).append(" ").append(ss.get(1)).append(" -> ").append(ss.get(2));
     return sb.toString();
   }
-  
+
   private static String buildPairString(String title, Map.Entry<String, String> sp) {
     StringBuilder sb = new StringBuilder();
     sb.append(title).append(" ")
         .append(sp.getKey()).append(" ").append(sp.getValue());
     return sb.toString();
   }
-  
-  
+
+
 }
