@@ -44,23 +44,16 @@
 <body ng-controller="DiffCtrl">
 <div class="container">
 
-{{ active_tab }} -- {{ loading }} - {{ !loading }}
-<p>
-   {{ foobar }}
-</p>
-<p>
-
-<h1> {{orgName}}/{{projectName}} Dependencies Version Differences</h1>
-<br/>
 <h5>
 
    <a href="http://code.notsoclever.cc/camel-release-package-version-differences/">
-      http://code.notsoclever.cc/camel-release-package-version-differences/
-   </a>
-
-   <p></p>
-   <a href="https://github.com/tjsnell/vdiff">https://github.com/tjsnell/vdiff</a>
+      <img src="/images/not.png"/> Another Not So Clever Code example</a>
 </h5>
+<p>
+
+<h1> {{ capIt(orgName) }} {{ capIt(projectName) }} Dependencies Version Differences</h1>
+<br/>
+
 <p>
 
 
@@ -250,6 +243,8 @@
       </div>
    </div>
 </div>
+<a href="https://github.com/tjsnell/vdiff"><img src="/images/GitHub-Mark-32px.png"/> https://github.com/tjsnell/vdiff</a>
 </div>
+
 </body>
 </html>

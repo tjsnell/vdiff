@@ -18,17 +18,25 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
       var older, newer;
 
       if ($scope.active_tab == 'tags') {
-         older = $scope.oldTag;
-         newer = $scope.newTag;
-         $location.path("diff/" + $scope.orgName + "/" + $scope.projectName + "/tags/" + older + "/" + newer);
-         older = $scope.tagOptions[older];
-         newer = $scope.tagOptions[newer];
+         $location.path("diff/"
+            + $scope.orgName + "/"
+            + $scope.projectName
+            + "/tags/"
+            + $scope.oldTag + "/"
+            + $scope.newTag);
+
+         older = $scope.tagOptions[$scope.oldTag];
+         newer = $scope.tagOptions[$scope.newTag];
       } else {
-         older = $scope.oldBranch;
-         newer = $scope.newBranch;
-         $location.path("diff/" + $scope.orgName + "/" + $scope.projectName + "/branches/" + older + "/" + newer);
-         older = $scope.branchOptions[older];
-         newer = $scope.branchOptions[newer];
+         $location.path("diff/"
+            + $scope.orgName + "/"
+            + $scope.projectName
+            + "/branches/"
+            + $scope.oldBranch + "/"
+            + $scope.newBranch);
+
+         older = $scope.branchOptions[$scope.oldBranch];
+         newer = $scope.branchOptions[$scope.newBranch];
       }
 
       $http.get("/vdiff/compare/" + $scope.orgName + "/" + $scope.projectName + "/" + older + "/" + newer)
@@ -121,11 +129,12 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
             $scope.branchOptions = {};
 
             for (var i = 0; i < $scope.branchesList.length; i++) {
-//            for (var i = $scope.branchesList.length - 1; i >= 0; i--) {
                shortName = $scope.shorten($scope.branchesList[i]);
                $scope.branchOptions[shortName] = $scope.branchesList[i];
                $scope.branchesList[i] = shortName;
             }
+
+            $scope.branchesList.reverse();
 
             $scope.oldBranchesList = $scope.branchesList;
             $scope.newBranchesList = $scope.branchesList.slice(0);
@@ -167,7 +176,6 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
       loadTags();
       loadBranches();
    };
-
 
 
    $scope.oldTagUpdate = function () {
@@ -235,6 +243,10 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
       }
    };
 
+   $scope.capIt = function (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+   }
+
    $scope.toggleAdded = function () {
       $scope.showAdded = !$scope.showAdded;
    };
@@ -256,6 +268,8 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
 }
 
 
+
+
 function sortObject(o) {
    var sorted = {},
       key, a = [];
@@ -275,10 +289,3 @@ function sortObject(o) {
 }
 
 
-Array.prototype.get = function (name) {
-   for (var i = 0, len = this.length; i < len; i++) {
-      if (typeof this[i] != "object") continue;
-      if (this[i].name === name) return this[i].value;
-   }
-   return null;
-};
