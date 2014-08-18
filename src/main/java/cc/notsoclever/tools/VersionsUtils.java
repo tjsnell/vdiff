@@ -15,6 +15,7 @@ public class VersionsUtils {
         List<String> versionTags = new ArrayList<String>();
         try {
             ObjectMapper mapper = new ObjectMapper();
+            System.out.println("source = " + source);
             List<Branch> allTags = mapper.readValue(source, mapper.getTypeFactory().constructCollectionType(
                   List.class, Branch.class));
             for (Branch b : allTags) {

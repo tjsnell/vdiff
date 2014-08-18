@@ -4,7 +4,8 @@ angular.module('myApp', ['ngCookies'], function ($locationProvider) {
    console.log("INIT the location Provider.")
 });
 
-function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
+function DiffCtrl($scope, $http, $routeParams, $location, $cookies, $window) {
+
 
    $scope.diff = function () {
       console.log("diff()");
@@ -20,7 +21,7 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
       if ($scope.active_tab == 'tags') {
          $location.path("diff/"
             + $scope.orgName + "/"
-            + $scope.projectName
+            + $scope.projectName.toLowerCase()
             + "/tags/"
             + $scope.oldTag + "/"
             + $scope.newTag);
@@ -30,7 +31,7 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
       } else {
          $location.path("diff/"
             + $scope.orgName + "/"
-            + $scope.projectName
+            + $scope.projectName.toLowerCase()
             + "/branches/"
             + $scope.oldBranch + "/"
             + $scope.newBranch);
@@ -58,6 +59,12 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
          });
 
    };
+
+   $scope.selectProject = function() {
+      console.log("GOGO");
+      $window.location.href = "/diff/"
+         + $scope.project.org + "/" + $scope.project.name.toLowerCase();
+   }
 
    $scope.shorten = function (str) {
       var reg = new RegExp($scope.projectName + "-(.*)");
@@ -152,27 +159,39 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies) {
 
       $("body").css("cursor", "wait");
 
+      $scope.projects = {};
+      $scope.projects['camel'] = { "name": "Camel", "org": "apache"};
+      $scope.projects['karaf'] = { "name": "Karaf", "org": "apache"};
+      $scope.projects['cxf'] = { "name": "CXF", "org": "apache"};
+      $scope.projects['activemq'] = { "name": "ActiveMQ", "org": "apache"};
+      $scope.projects['atmosphere'] = { "name": "Atmosphere", "org": "atmostphere"};
+
+
       if (typeof $cookies.activeTab !== 'undefined') {
          $scope.active_tab = $cookies.activeTab;
       } else {
          $scope.active_tab = 'tags';
       }
 
-      if (typeof $cookies.activeTab !== 'undefined') {
-         $scope.active_tab = $cookies.activeTab;
-      }
 
       if (typeof $cookies.org === 'undefined') {
          // set defaults
          $scope.orgName = 'apache';
          $scope.projectName = 'camel';
+         $scope.project = $scope.projects["camel"];
       } else {
          $scope.orgName = $cookies.org;
          $scope.projectName = $cookies.proj;
+         $scope.project = $scope.projects[$cookies.proj.toLowerCase()];
       }
 
       $location.path("diff/" + $scope.orgName + "/" + $scope.projectName);
 
+
+
+      for (k in $scope.projects) {
+         console.log('Project: ' + k);
+      }
       loadTags();
       loadBranches();
    };

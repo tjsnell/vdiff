@@ -49,13 +49,29 @@
    <a href="http://code.notsoclever.cc/camel-release-package-version-differences/">
       <img src="/images/not.png"/> Another Not So Clever Code example</a>
 </h5>
+
 <p>
 
-<h1> {{ capIt(orgName) }} {{ capIt(projectName) }} Dependencies Version Differences</h1>
+<h1> {{ capIt(projectName) }} Dependencies Version Differences</h1>
 <br/>
 
 <p>
 
+<div class="form-vertical">
+   <div class="form-group form-group-lg">
+      <div class="row">
+         <label class="col-md-2 control-label">Project</label>
+
+         <div class="col-md-4">
+            <select name="option" class="form-control"
+                    ng-model="project"
+                    ng-options="o as o.name for (k, o) in projects"
+                    ng-change="selectProject()">
+            </select>
+         </div>
+      </div>
+   </div>
+</div>
 
 <ul class="nav nav-tabs" id="myTab">
    <li ng-class="{active: active_tab == 'tags'}" ng-click="active_tab = 'tags'"><a href="javascript:void(0)">Tags</a>
@@ -67,6 +83,7 @@
 <div id='content' class="tab-content">
    <div ng-class="{active: active_tab == 'tags'}" class="tab-pane" id="tags">
       <p>
+
       <form class="form-horizontal" role="form">
 
          <div class="form-group form-group-lg">
@@ -102,6 +119,7 @@
 
    <div ng-class="{active: active_tab == 'branches'}" class="tab-pane" id="branches">
       <p>
+
       <form class="form-horizontal" role="form">
 
          <div class="form-group form-group-lg">
@@ -243,7 +261,8 @@
       </div>
    </div>
 </div>
-<a href="https://github.com/tjsnell/vdiff"><img src="/images/GitHub-Mark-32px.png"/> https://github.com/tjsnell/vdiff</a>
+<a href="https://github.com/tjsnell/vdiff"><img src="/images/GitHub-Mark-32px.png"/>
+   https://github.com/tjsnell/vdiff</a>
 </div>
 
 </body>
