@@ -164,7 +164,7 @@ function DiffCtrl($scope, $http, $routeParams, $location, $cookies, $window) {
       $scope.projects['karaf'] = { "name": "Karaf", "org": "apache"};
       $scope.projects['cxf'] = { "name": "CXF", "org": "apache"};
       $scope.projects['activemq'] = { "name": "ActiveMQ", "org": "apache"};
-      $scope.projects['atmosphere'] = { "name": "Atmosphere", "org": "atmostphere"};
+      $scope.projects['atmosphere'] = { "name": "Atmosphere", "org": "atmosphere"};
 
 
       if (typeof $cookies.activeTab !== 'undefined') {
